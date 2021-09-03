@@ -1,0 +1,35 @@
+name: youtube_on_steroids
+description: A new Flutter project.
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  #Core
+  http: ^0.13.3
+  retry: ^3.1.0
+  get_it: ^7.2.0
+  bloc: ^7.1.0
+  flutter_bloc: ^7.2.0
+  rxdart: ^0.27.1
+
+
+  # Views
+  google_fonts: ^2.1.0
+  flutter_screenutil: ^5.0.0+2
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
