@@ -27,7 +27,7 @@ class _AppViewState extends State<AppView> {
 
   void onAppStateChanged(_, AppState state) {
     if (state is AppStateLoaded) {
-      appContext.push(const HomePage());
+      appContext.push(const WrapperPage());
     }
     if (state is AppStateFailed) {
       appContext.push(const ErrorPage());

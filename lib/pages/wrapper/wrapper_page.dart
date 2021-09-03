@@ -3,6 +3,8 @@ import 'package:youtube_on_steroids/pages/history/history_page.dart';
 import 'package:youtube_on_steroids/pages/home/home_page.dart';
 
 class WrapperPage extends StatefulWidget {
+  const WrapperPage();
+
   @override
   _WrapperPageState createState() => _WrapperPageState();
 }
