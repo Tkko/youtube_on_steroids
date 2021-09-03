@@ -24,7 +24,7 @@ dependencies:
   #
   shared_preferences: ^2.0.7
   video_player: ^2.1.15
-#  youtube_explode_dart: ^1.10.6
+  youtube_explode_dart: ^1.9.1
 
 
   # Views
@@ -38,3 +38,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # images
+  assets:
+    - assets/images/user.png
+    - assets/images/userv2.jpg
+    - assets/images/logov2.png

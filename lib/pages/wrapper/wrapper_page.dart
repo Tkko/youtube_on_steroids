@@ -1,4 +1,5 @@
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/widgets/appbars/searchable.dart';
 import 'package:youtube_on_steroids/pages/history/history_page.dart';
 import 'package:youtube_on_steroids/pages/home/home_page.dart';
 
@@ -19,6 +20,7 @@ class _WrapperPageState extends State<WrapperPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: Searchable().display(),
       body: [
         HomePage(),
         HistoryPage(),
