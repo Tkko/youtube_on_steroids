@@ -20,9 +20,17 @@ class Classic implements BaseAppbar {
         Container(
           padding: EdgeInsets.all(13.0),
           margin: const EdgeInsets.only(left: 10.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: Image.asset('assets/images/userv2.jpg'),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: 30,
+              maxHeight: 30,
+              minWidth: 30,
+              maxWidth: 30,
+            ),
+            child: ClipRRect(
+              child: Image.asset('assets/images/user.png'),
+              borderRadius: BorderRadius.circular(15.0),
+            ),
           ),
         ),
       ],
