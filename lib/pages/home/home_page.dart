@@ -47,6 +47,7 @@ class HomePage extends StatelessWidget {
                       publishDate: data[index].publishDate,
                       thumbnail: data[index].thumbnails.mediumResUrl,
                       title: data[index].title,
+                      isLive: data[index].isLive,
                     );
                   },
                 );

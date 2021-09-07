@@ -12,6 +12,7 @@ class VideoItem extends StatelessWidget {
   final DateTime publishDate;
   final ChannelId channelId;
   final String videoUrl;
+  final bool isLive;
 
   VideoItem(
       {this.id,
@@ -22,13 +23,28 @@ class VideoItem extends StatelessWidget {
       this.thumbnail,
       this.title,
       this.videoUrl,
-      this.views});
+      this.views,
+      this.isLive});
 
   // Future<String> get getChannelUrl async {
   //   var yt = YoutubeExplode();
   //   var response = await yt.channels.get(channelId);
   //   return response.logoUrl;
   // }
+  String _durationDisplay(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    if (this.isLive) {
+      return 'LIVE';
+    }
+    if (duration.inHours == 0) {
+      String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+      String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+      return "$twoDigitMinutes:$twoDigitSeconds";
+    }
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +66,15 @@ class VideoItem extends StatelessWidget {
                 right: 1,
                 child: Container(
                   width: 34,
-                  color: Colors.black54,
+                  color: this.isLive ? Colors.red : Colors.black54,
                   padding: EdgeInsets.symmetric(
                     vertical: 5,
                     horizontal: 5,
                   ),
                   child: FittedBox(
                     child: Text(
-                      //TODO:: reformat time;
-                      '$duration'.substring(3, 7),
+                      _durationDisplay(duration),
+                      // '${duration.inHours}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 26,

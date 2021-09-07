@@ -1,7 +1,7 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/pages/history/history_page.dart';
 import 'package:youtube_on_steroids/pages/home/home_page.dart';
-import 'package:youtube_on_steroids/widgets/custom_app_bar.dart';
+import 'package:youtube_on_steroids/widgets/app_bar/custom_app_bar.dart';
 
 class WrapperPage extends StatefulWidget {
   const WrapperPage();

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
+// import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:youtube_on_steroids/app/constants.dart';
 import 'package:youtube_on_steroids/search/search.dart';
+import 'package:youtube_on_steroids/widgets/app_bar/app_bar_filters.dart';
 
 class CustomAppBar extends StatefulWidget {
   // const CustomAppBar({Key key}) : super(key: key);
@@ -72,21 +74,28 @@ class _CustomAppBarState extends State<CustomAppBar> {
       //         },
       //       )
       //     : Text(''),
-      leading: Container(
-        width: 50,
-        child:
-            //  _isSearching
-            // ? IconButton(
-            //     onPressed: () {
-            //       setState(() {
-            //         _isSearching = false;
-            //       });
-            //     },
-            //     icon: Icon(Icons.arrow_back))
-            // :
-            Image.network(
-          'https://www.vippng.com/png/full/5-53780_youtube-logo-youtube-text-logo-png.png',
-          fit: BoxFit.fitWidth,
+      automaticallyImplyLeading: false,
+      title: GestureDetector(
+        onTap: () {
+          Navigator.of(context).popAndPushNamed(AppRoutes.WRAPPER);
+        },
+        child: Container(
+          width: 100,
+          // padding: EdgeInsets.all(10),
+          child:
+              //  _isSearching
+              // ? IconButton(
+              //     onPressed: () {
+              //       setState(() {
+              //         _isSearching = false;
+              //       });
+              //     },
+              //     icon: Icon(Icons.arrow_back))
+              // :
+              Image.network(
+            'https://www.vippng.com/png/full/5-53780_youtube-logo-youtube-text-logo-png.png',
+            fit: BoxFit.fill,
+          ),
         ),
       ),
       pinned: false,
@@ -94,6 +103,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       floating: true,
       forceElevated: true,
       elevation: 10,
+      bottom: CustomAppBarFilters(),
     );
   }
 }
