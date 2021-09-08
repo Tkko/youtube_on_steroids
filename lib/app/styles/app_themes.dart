@@ -23,7 +23,7 @@ class AppThemes {
         textTheme: TextTheme(
           headline6: GoogleFonts.poppins(
             color: kLM_TEXT_PRIMARY,
-            fontSize: 28,
+            fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
           subtitle1: GoogleFonts.poppins(

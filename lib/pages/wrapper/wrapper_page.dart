@@ -1,6 +1,7 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/pages/history/history_page.dart';
 import 'package:youtube_on_steroids/pages/home/home_page.dart';
+import 'package:youtube_on_steroids/widgets/custom_app_bar.dart';
 
 class WrapperPage extends StatefulWidget {
   const WrapperPage();
@@ -19,10 +20,19 @@ class _WrapperPageState extends State<WrapperPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: [
-        HomePage(),
-        HistoryPage(),
-      ][_selectedIndex],
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              CustomAppBar(),
+            ];
+          },
+          body: [
+            HomePage(),
+            HistoryPage(),
+          ][_selectedIndex],
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -30,7 +40,7 @@ class _WrapperPageState extends State<WrapperPage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.history),
             label: 'History',
           ),
         ],
