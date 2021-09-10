@@ -7,6 +7,12 @@ import 'package:youtube_on_steroids/widgets/app_bar/app_bar_filters.dart';
 
 class CustomAppBar extends StatefulWidget {
   // const CustomAppBar({Key key}) : super(key: key);
+  bool hasFilters = true;
+  bool isPinned;
+  bool isFloating;
+  bool isSnapped;
+  CustomAppBar(
+      {this.hasFilters, this.isFloating, this.isPinned, this.isSnapped});
 
   @override
   _CustomAppBarState createState() => _CustomAppBarState();
@@ -19,61 +25,16 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return SliverAppBar(
       actions: [
-        // _isSearching
-        //     ?
         IconButton(
             onPressed: () {
               showSearch(context: context, delegate: Search());
             },
-            icon: Icon(Icons.search))
-        // : IconButton(
-        //     onPressed: () {
-        //       setState(() {
-        //         _isSearching = true;
-        //       });
-        //     },
-        //     icon: Icon(Icons.search))
+            icon: Icon(
+              Icons.search,
+              size: 24,
+              color: Colors.black38,
+            ))
       ],
-      // title: _isSearching
-      //     ? TypeAheadField<String>(
-      //         textFieldConfiguration: TextFieldConfiguration(
-      //             style: TextStyle(
-      //               color: Colors.black,
-      //             ),
-      //             cursorColor: Colors.black,
-      //             autofocus: true,
-      //             decoration: InputDecoration(
-      //               // focusedBorder: UnderlineInputBorder(
-      //               //     borderRadius: BorderRadius.circular(23)),
-      //               // enabledBorder: UnderlineInputBorder(
-      //               //     borderRadius: BorderRadius.circular(23)),
-      //               // fillColor: Colors.white,
-      //               filled: true,
-      //               hintText: 'Search Here',
-      //             )),
-      //         suggestionsCallback: getSuggestions,
-      //         suggestionsBoxDecoration: SuggestionsBoxDecoration(
-      //             elevation: 30,
-      //             constraints: BoxConstraints(
-      //               maxHeight: 400,
-      //             )),
-      //         itemBuilder: (context, data) {
-      //           final suggestion = data;
-      //           return Container(
-      //             decoration: BoxDecoration(
-      //                 border: Border(
-      //               bottom: BorderSide(width: 1, color: Colors.grey),
-      //             )),
-      //             child: ListTile(
-      //               title: Text(suggestion),
-      //             ),
-      //           );
-      //         },
-      //         onSuggestionSelected: (suggestion) {
-      //           // getVideos(suggestion);
-      //         },
-      //       )
-      //     : Text(''),
       automaticallyImplyLeading: false,
       title: GestureDetector(
         onTap: () {
@@ -81,29 +42,21 @@ class _CustomAppBarState extends State<CustomAppBar> {
         },
         child: Container(
           width: 100,
-          // padding: EdgeInsets.all(10),
-          child:
-              //  _isSearching
-              // ? IconButton(
-              //     onPressed: () {
-              //       setState(() {
-              //         _isSearching = false;
-              //       });
-              //     },
-              //     icon: Icon(Icons.arrow_back))
-              // :
-              Image.network(
+          child: Image.network(
             'https://www.vippng.com/png/full/5-53780_youtube-logo-youtube-text-logo-png.png',
             fit: BoxFit.fill,
           ),
         ),
       ),
-      pinned: false,
-      snap: true,
-      floating: true,
+      pinned: widget.isPinned,
+      snap: widget.isSnapped,
+      floating: widget.isFloating,
       forceElevated: true,
       elevation: 10,
-      bottom: CustomAppBarFilters(),
+      bottom: widget.hasFilters
+          ? CustomAppBarFilters()
+          : PreferredSize(
+              child: Container(), preferredSize: Size.fromHeight(0)),
     );
   }
 }

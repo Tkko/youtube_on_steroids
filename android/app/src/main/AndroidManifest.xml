@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fman.ge.youtube_on_steroids">
+  <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="youtube_on_steroids"
         android:icon="@mipmap/ic_launcher">

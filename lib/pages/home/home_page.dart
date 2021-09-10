@@ -1,21 +1,21 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:youtube_on_steroids/controllers/youtube_explode_controller.dart';
 
 import '../../widgets/video_item.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage();
-  Future<List<Video>> getPlayList() async {
-    List<Video> videos = [];
-    var yt = YoutubeExplode();
 
-    await for (var video in yt.playlists
-        .getVideos('PLtE5j1bLtffCx_6gjkywC6hdNMpOe23_O')
-        .take(20)) {
-      videos.add(video);
-    }
+  @override
+  _HomePageState createState() => _HomePageState();
+}
 
-    return videos;
+class _HomePageState extends State<HomePage> {
+  Future<List<Video>> _data;
+  void initState() {
+    super.initState();
+    _data = YoutubeController.getPlaylist('PLFs4vir_WsTyY31efyHdmtp9l7DpR0Wvi');
   }
 
   @override
@@ -23,7 +23,8 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: FutureBuilder<List<Video>>(
-            future: getPlayList(),
+            //TODO: try qubits
+            future: _data,
             builder: (context, snapshot) {
               // Data is loading here
               if (!snapshot.hasData) {
@@ -37,18 +38,7 @@ class HomePage extends StatelessWidget {
                 return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    return VideoItem(
-                      id: data[index].id,
-                      channelId: data[index].channelId,
-                      author: data[index].author,
-                      videoUrl: data[index].url,
-                      views: data[index].engagement.viewCount,
-                      duration: data[index].duration,
-                      publishDate: data[index].publishDate,
-                      thumbnail: data[index].thumbnails.mediumResUrl,
-                      title: data[index].title,
-                      isLive: data[index].isLive,
-                    );
+                    return VideoItem(data[index]);
                   },
                 );
               }

@@ -1,39 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/controllers/youtube_explode_controller.dart';
 
 class VideoItem extends StatelessWidget {
-  final VideoId id;
-  final String thumbnail;
-  final String title;
-  final String author;
-  final int views;
-  final Duration duration;
-  final DateTime publishDate;
-  final ChannelId channelId;
-  final String videoUrl;
-  final bool isLive;
+  final Video video;
 
   VideoItem(
-      {this.id,
-      this.author,
-      this.channelId,
-      this.duration,
-      this.publishDate,
-      this.thumbnail,
-      this.title,
-      this.videoUrl,
-      this.views,
-      this.isLive});
+    this.video,
+  );
+  //TODO:: get logo url;
+  String logoUrl =
+      'https://www.oseyo.co.uk/wp-content/uploads/2020/05/empty-profile-picture-png-2-2.png';
 
-  // Future<String> get getChannelUrl async {
-  //   var yt = YoutubeExplode();
-  //   var response = await yt.channels.get(channelId);
-  //   return response.logoUrl;
-  // }
   String _durationDisplay(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
-    if (this.isLive) {
+    if (video.isLive) {
       return 'LIVE';
     }
     if (duration.inHours == 0) {
@@ -48,16 +30,18 @@ class VideoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // YoutubeController.getChannelLogoUrl(video.id).then((value) {});
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.SINGLE_VIDEO, arguments: id);
+        Navigator.of(context)
+            .pushNamed(AppRoutes.SINGLE_VIDEO, arguments: video);
       },
       child: Column(
         children: <Widget>[
           Stack(
             children: [
               Image.network(
-                thumbnail,
+                video.thumbnails.mediumResUrl,
                 width: double.infinity,
                 fit: BoxFit.fill,
               ),
@@ -65,15 +49,16 @@ class VideoItem extends StatelessWidget {
                 bottom: 1,
                 right: 1,
                 child: Container(
-                  width: 34,
-                  color: this.isLive ? Colors.red : Colors.black54,
+                  height: 16,
+                  color: video.isLive ? Colors.red : Colors.black87,
                   padding: EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 5,
+                    vertical: 1,
+                    horizontal: 4,
                   ),
+                  margin: EdgeInsets.all(5),
                   child: FittedBox(
                     child: Text(
-                      _durationDisplay(duration),
+                      _durationDisplay(video.duration),
                       // '${duration.inHours}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -92,18 +77,21 @@ class VideoItem extends StatelessWidget {
             margin: EdgeInsets.only(bottom: 10),
             child: ListTile(
               title: Text(
-                '$title',
+                '${video.title}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
               leading: GestureDetector(
                 child: CircleAvatar(
-                  foregroundImage: NetworkImage(
-                      'https://www.oseyo.co.uk/wp-content/uploads/2020/05/empty-profile-picture-png-2-2.png'),
+                  foregroundImage: NetworkImage(logoUrl),
                 ),
               ),
-              subtitle: Text('$author * $views views * $publishDate  '),
+              subtitle: Text(
+                '${video.author} • ${video.engagement.viewCount} views • ${video.publishDate}',
+                style: TextStyle(color: Colors.grey[700], fontSize: 12),
+              ),
             ),
           )
         ],

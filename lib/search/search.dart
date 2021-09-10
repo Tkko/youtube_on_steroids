@@ -3,6 +3,8 @@ import 'package:youtube_on_steroids/app/app.dart';
 
 import 'package:flutter/material.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/pages/results/results_page.dart';
+import 'package:youtube_on_steroids/controllers/youtube_explode_controller.dart';
 import 'package:youtube_on_steroids/widgets/video_item.dart';
 
 class Search extends SearchDelegate<List<String>> {
@@ -14,25 +16,26 @@ class Search extends SearchDelegate<List<String>> {
         color: Colors.white,
         fontSize: 5.0,
       );
-  Future<List<String>> getSuggestions(String q) async {
-    List<String> result;
-    if (q.isNotEmpty) {
-      print(q);
-      var yt = new YoutubeHttpClient();
-      result = await SearchClient(yt).getQuerySuggestions(q);
-      print(result);
-    }
-    return result;
-  }
 
-  Future<List<Video>> getResults(String keyword) async {
-    var yt = new YoutubeHttpClient();
-    List<Video> results;
-    if (keyword.isNotEmpty) {
-      results = await SearchClient(yt).getVideos(keyword);
-    }
-    return results;
-  }
+  // Future<List<String>> getSuggestions(String q) async {
+  //   List<String> result;
+  //   if (q.isNotEmpty) {
+  //     print(q);
+  //     var yt = new YoutubeHttpClient();
+  //     result = await SearchClient(yt).getQuerySuggestions(q);
+  //     print(result);
+  //   }
+  //   return result;
+  // }
+
+  // Future<List<Video>> getResults(String keyword) async {
+  //   var yt = new YoutubeHttpClient();
+  //   List<Video> results;
+  //   if (keyword.isNotEmpty) {
+  //     results = await SearchClient(yt).getVideos(keyword);
+  //   }
+  //   return results;
+  // }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -57,9 +60,9 @@ class Search extends SearchDelegate<List<String>> {
   @override
   Widget buildResults(BuildContext context) {
     final searchKeyword = query;
-    //TODO: get this in results page;
+    // TODO: get this in results page;
     return FutureBuilder<List<Video>>(
-        future: getResults(searchKeyword),
+        future: YoutubeController.getSearchResults(searchKeyword),
         builder: (context, snapshot) {
           // Data is loading here
           if (!snapshot.hasData) {
@@ -74,15 +77,7 @@ class Search extends SearchDelegate<List<String>> {
               itemCount: data.length,
               itemBuilder: (context, index) {
                 return VideoItem(
-                  id: data[index].id,
-                  channelId: data[index].channelId,
-                  author: data[index].author,
-                  videoUrl: data[index].url,
-                  views: data[index].engagement.viewCount,
-                  duration: data[index].duration,
-                  publishDate: data[index].publishDate,
-                  thumbnail: data[index].thumbnails.mediumResUrl,
-                  title: data[index].title,
+                  data[index],
                 );
               },
             );
@@ -93,7 +88,7 @@ class Search extends SearchDelegate<List<String>> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return FutureBuilder<List<String>>(
-        future: getSuggestions(query),
+        future: YoutubeController.getSearchSuggestions(query),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             //TODO: show previous Searches
