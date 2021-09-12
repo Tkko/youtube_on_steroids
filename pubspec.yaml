@@ -20,11 +20,13 @@ dependencies:
   bloc: ^7.1.0
   flutter_bloc: ^7.2.0
   rxdart: ^0.27.1
+  intl: ^0.17.0
 
   #
   shared_preferences: ^2.0.7
   video_player: ^2.1.15
   youtube_explode_dart: ^1.10.4
+  provider: ^6.0.0
 
 
   # Views

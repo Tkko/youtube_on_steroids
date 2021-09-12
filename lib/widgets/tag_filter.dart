@@ -23,13 +23,17 @@ class TagFilter extends StatelessWidget {
               onTap: () => print("clicked"),
               child: FittedBox(
                 fit: BoxFit.none,
-                child: Text('${tags[index]}', style: index == 0 ? TextStyle(color: Colors.white) : TextStyle(), // Only for demonstration purpose!
+                child: Text('${tags[index]}', style: index == 0
+                    ? TextStyle(color: Colors.white)
+                    : TextStyle(), // Only for demonstration purpose!
                 ),
               ),
             ),
             decoration: BoxDecoration(
                 border: Border.all(width: 2.0, color: index == 0 ? Colors.grey[600]: Colors.grey[300]), // Only for demonstration purpose!
-                color: index == 0 ? Colors.grey[600] : Color(0xF3F3F6FF), // Only for demonstration purpose!
+                color: index == 0
+                    ? Colors.grey[600]
+                    : Color(0xF3F3F6FF), // Only for demonstration purpose!
                 borderRadius: BorderRadius.all(Radius.circular(25.0))
             ),
           );

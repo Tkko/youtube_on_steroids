@@ -1,22 +1,38 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/widgets/appbars/base_appbar.dart';
+import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/pages/home/home_page.dart';
+import 'package:youtube_on_steroids/utils/youtube_search.dart';
+import 'package:youtube_on_steroids/widgets/appbars/i_appbar.dart';
 
-class Classic implements BaseAppbar {
+class Classic implements IAppbar {
+
   @override
-  Widget display() {
+  Widget display(BuildContext context) {
     return AppBar(
       leading: Builder(
         builder: (BuildContext context) {
-          return Container(
-            padding: EdgeInsets.all(10.0),
-            child: Image.asset('assets/images/logov2.png'),
+          return  InkWell(
+            onTap: () =>Navigator.of(context)
+                .pushNamedAndRemoveUntil(AppRoutes.WRAPPER, (Route<dynamic> route) => false),
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              child: Image.asset('assets/images/logov2.png'),
+            ),
           );
         },
       ),
       leadingWidth: 130,
       actions: [
-        Icon(Icons.search, size: 30),
+        GestureDetector(
+          onTap: () async{
+            await showSearch(
+                context: context,
+                delegate: YoutubeSearch(),
+            );
+          },
+          child: Icon(Icons.search, size: 30),
+        ),
         Container(
           padding: EdgeInsets.all(13.0),
           margin: const EdgeInsets.only(left: 10.0),

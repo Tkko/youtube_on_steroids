@@ -1,10 +1,10 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/widgets/appbars/base_appbar.dart';
+import 'package:youtube_on_steroids/widgets/appbars/i_appbar.dart';
 
-class Searchable implements BaseAppbar {
+class Searchable implements IAppbar {
   @override
-  Widget display() {
+  Widget display(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back),

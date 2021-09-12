@@ -1,8 +1,9 @@
+import 'dart:ffi';
+
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/widgets/appbars/classic.dart';
-import 'package:youtube_on_steroids/widgets/appbars/searchable.dart';
 import 'package:youtube_on_steroids/pages/history/history_page.dart';
 import 'package:youtube_on_steroids/pages/home/home_page.dart';
+import 'package:youtube_on_steroids/providers/history_provider.dart';
 
 class WrapperPage extends StatefulWidget {
   const WrapperPage();
@@ -21,26 +22,25 @@ class _WrapperPageState extends State<WrapperPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Classic().display(),
-      body: [
-        HomePage(),
-        HistoryPage(),
-      ][_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'History',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
-    );
+        body: [
+          HomePage(),
+          HistoryPage(),
+        ][_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: 'History',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ),
+      );
   }
 }
