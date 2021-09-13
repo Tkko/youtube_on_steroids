@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
-import 'package:youtube_on_steroids/controllers/youtube_explode_controller.dart';
+import 'package:youtube_on_steroids/services/history.dart';
 
 class VideoItem extends StatelessWidget {
   final Video video;
-
-  VideoItem(
+  VideoItem({
     this.video,
-  );
+  });
+
+  // void saveToHistory() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   List<String> historyList = prefs.getStringList('video_history') ?? [];
+  //   historyList.removeWhere((element) => element == video.id.toString());
+  //   if (historyList.length == 20) {
+  //     historyList.removeAt(0);
+  //   }
+  //   historyList.add(video.id.toString());
+  //   prefs.setStringList('video_history', historyList);
+  //   print('added to history');
+  // }
+
   //TODO:: get logo url;
-  String logoUrl =
+  final String logoUrl =
       'https://www.oseyo.co.uk/wp-content/uploads/2020/05/empty-profile-picture-png-2-2.png';
 
   String _durationDisplay(Duration duration) {
@@ -30,9 +42,9 @@ class VideoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // YoutubeController.getChannelLogoUrl(video.id).then((value) {});
     return InkWell(
       onTap: () {
+        HistoryController.saveHistory(video.id.toString());
         Navigator.of(context)
             .pushNamed(AppRoutes.SINGLE_VIDEO, arguments: video);
       },

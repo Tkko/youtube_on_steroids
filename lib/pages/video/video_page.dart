@@ -1,13 +1,13 @@
 // import 'package:http/http.dart' as http;
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
-import 'package:youtube_on_steroids/search/search.dart';
-import 'package:youtube_on_steroids/widgets/app_bar/custom_app_bar.dart';
-import 'package:youtube_on_steroids/controllers/youtube_explode_controller.dart';
-import 'package:youtube_on_steroids/widgets/video_item.dart';
+import 'package:youtube_on_steroids/services/search.dart';
+import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
+import 'package:youtube_on_steroids/widgets/video_cards/video_item.dart';
 
 class VideoPage extends StatefulWidget {
   const VideoPage();
@@ -19,9 +19,9 @@ class _VideoPageState extends State<VideoPage> {
   VideoPlayerController _controller;
   // VideoId videoId;
   String videoUrl = '';
-  bool _isVideoLoading = false;
-  bool _isVideoLoaded = false;
-  bool _isControlVisible = false;
+  bool _isVideoLoading = true;
+  bool _isVideoLoaded = true;
+  bool _isControlVisible = true;
   String _errorMessage;
   Video _video;
 
@@ -35,6 +35,7 @@ class _VideoPageState extends State<VideoPage> {
           _isControlVisible = true;
         });
       });
+      print('${_controller.value.isInitialized}');
       print('waiting for init in controller');
     } else {
       _isVideoLoading = false;
@@ -69,21 +70,6 @@ class _VideoPageState extends State<VideoPage> {
       }
     }
   }
-
-  // Future<Channel> getChannelInfo() async {
-  //   var yt = YoutubeExplode();
-  //   var channel = await yt.channels.getByVideo(_video.id);
-  //   return channel;
-  // }
-
-  // Future<List<Video>> getSuggestions() async {
-  //   var yt = YoutubeExplode();
-  //   String query;
-
-  //   List<Video> video = await yt.search.getVideos(_video.title.toString());
-
-  //   return video;
-  // }
   //TODO:: comments not working;
 
   // Future<CommentsList> getCommentInfo() async {
@@ -230,7 +216,7 @@ class _VideoPageState extends State<VideoPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                     subtitle: Text(
-                      "${channel.subscribersCount} subscribers",
+                      "${NumberFormat.compact().format(channel.subscribersCount)} subscribers",
                       style: TextStyle(color: Colors.grey[600], fontSize: 12),
                     ),
                   ),
@@ -294,25 +280,12 @@ class _VideoPageState extends State<VideoPage> {
             shrinkWrap: true,
             itemCount: video.length,
             itemBuilder: (context, index) {
-              return VideoItem(video[index]);
+              return VideoItem(video: video[index]);
             }),
       );
     }
 
     return Scaffold(
-      // body: SafeArea(
-      //   //TODO: different appbar here
-      //   // child: NestedScrollView(
-      //   //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      //   //     return <Widget>[
-      //   //       CustomAppBar(
-      //   //         hasFilters: false,
-      //   //         isPinned: true,
-      //   //         isSnapped: false,
-      //   //         isFloating: false,
-      //   //       ),
-      //   //     ];
-      //   //   },
       appBar: AppBar(
         backgroundColor: Colors.black87,
         leadingWidth: 0,
@@ -345,8 +318,8 @@ class _VideoPageState extends State<VideoPage> {
       body: SafeArea(
         child: FutureBuilder(
           future: Future.wait([
-            YoutubeController.getChannelInfo(_video.id),
-            YoutubeController.getVideoSuggestions(
+            YoutubeHelper.getChannelInfo(_video.id),
+            YoutubeHelper.getVideoSuggestions(
                 _video.keywords, _video.title.toString()),
           ]),
           builder: (context, snapshot) {
@@ -397,6 +370,8 @@ class _VideoPageState extends State<VideoPage> {
                 ],
               );
             }
+            print('snapshot error : ${snapshot.error}');
+            print('Video : ${_video.author} - ${_video.title}');
             return Center(
               child: CircularProgressIndicator(),
             );

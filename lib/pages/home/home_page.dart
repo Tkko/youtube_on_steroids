@@ -1,8 +1,8 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'package:youtube_on_steroids/controllers/youtube_explode_controller.dart';
+import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
 
-import '../../widgets/video_item.dart';
+import '../../widgets/video_cards/video_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage();
@@ -12,10 +12,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<Video>> _data;
+  ScrollController controller;
+  List<Video> _data;
+  String _playlistId = 'PLFs4vir_WsTyY31efyHdmtp9l7DpR0Wvi';
+  int _limit = 20;
+  int _offset = 0;
+
   void initState() {
     super.initState();
-    _data = YoutubeController.getPlaylist('PLFs4vir_WsTyY31efyHdmtp9l7DpR0Wvi');
+    getData();
+  }
+
+  Future<List<Video>> getData() async {
+    //TODO
+    _data = await YoutubeHelper.getPlaylist(
+        playlistId: _playlistId, limit: _limit, offset: _offset);
+
+    return _data;
   }
 
   @override
@@ -24,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: FutureBuilder<List<Video>>(
             //TODO: try qubits
-            future: _data,
+            future: getData(),
             builder: (context, snapshot) {
               // Data is loading here
               if (!snapshot.hasData) {
@@ -38,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    return VideoItem(data[index]);
+                    return VideoItem(video: data[index]);
                   },
                 );
               }

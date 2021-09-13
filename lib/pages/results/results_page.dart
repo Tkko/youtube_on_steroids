@@ -1,8 +1,8 @@
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/controllers/youtube_explode_controller.dart';
+import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
 import 'package:youtube_on_steroids/widgets/app_bar/custom_app_bar.dart';
-import 'package:youtube_on_steroids/widgets/video_item.dart';
+import 'package:youtube_on_steroids/widgets/video_cards/video_item.dart';
 
 class ResultsPage extends StatefulWidget {
   const ResultsPage({Key key}) : super(key: key);
@@ -29,7 +29,7 @@ class _ResultsPageState extends State<ResultsPage> {
             ];
           },
           body: FutureBuilder<List<Video>>(
-              future: YoutubeController.getSearchResults(query),
+              future: YoutubeHelper.getSearchResults(query),
               builder: (context, snapshot) {
                 // Data is loading here
                 if (!snapshot.hasData) {
@@ -44,7 +44,7 @@ class _ResultsPageState extends State<ResultsPage> {
                     itemCount: data.length,
                     itemBuilder: (context, index) {
                       return VideoItem(
-                        data[index],
+                        video: data[index],
                       );
                     },
                   );

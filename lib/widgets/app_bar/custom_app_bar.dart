@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
-import 'package:youtube_on_steroids/search/search.dart';
+import 'package:youtube_on_steroids/services/search.dart';
 import 'package:youtube_on_steroids/widgets/app_bar/app_bar_filters.dart';
 
 class CustomAppBar extends StatefulWidget {
   // const CustomAppBar({Key key}) : super(key: key);
-  bool hasFilters = true;
-  bool isPinned;
-  bool isFloating;
-  bool isSnapped;
+  final bool hasFilters;
+  final bool isPinned;
+  final bool isFloating;
+  final bool isSnapped;
   CustomAppBar(
-      {this.hasFilters, this.isFloating, this.isPinned, this.isSnapped});
+      {@required this.hasFilters,
+      @required this.isFloating,
+      @required this.isPinned,
+      @required this.isSnapped});
 
   @override
   _CustomAppBarState createState() => _CustomAppBarState();

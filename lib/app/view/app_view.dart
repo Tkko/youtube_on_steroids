@@ -52,8 +52,9 @@ class _AppViewState extends State<AppView> {
         child: BlocBuilder<AppCubit, AppState>(
           builder: (context, state) {
             return MaterialApp(
-              title: 'SideSwap',
+              title: 'YoutubeOnSteroids',
               navigatorKey: appNavigatorKey,
+              debugShowCheckedModeBanner: false,
               theme: appThemes.theme,
               routes: appRoutes,
               initialRoute: appPage(state),

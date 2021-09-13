@@ -1,6 +1,6 @@
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-class YoutubeController {
+class YoutubeHelper {
   static Future<Video> getVideo(videoId) async {
     var yt = YoutubeExplode();
     Video video = await yt.videos.get(videoId);
@@ -8,14 +8,23 @@ class YoutubeController {
     return video;
   }
 
-  static Future<List<Video>> getPlaylist(playlistId) async {
+  static Future<List<Video>> getVideosFromList(list) async {
+    List<Video> videos = [];
+    for (var videoId in list) {
+      var video = await getVideo(videoId);
+      videos.add(video);
+    }
+    return videos;
+  }
+
+  static Future<List<Video>> getPlaylist(
+      {playlistId, int limit, int offset, List<Video> data}) async {
     List<Video> videos = [];
     var yt = YoutubeExplode();
 
-    await for (var video in yt.playlists.getVideos(playlistId).take(20)) {
+    await for (var video in yt.playlists.getVideos(playlistId).take(10)) {
       videos.add(video);
     }
-
     return videos;
   }
 
@@ -51,14 +60,16 @@ class YoutubeController {
       List<String> keywords, String videoTitle) async {
     var yt = YoutubeExplode();
     String query;
-
+    //TODO:: remove video same as current
     if (keywords.isNotEmpty) {
       keywords.shuffle();
       query = keywords.first;
     } else {
-      query = videoTitle.substring(0, 5);
+      List<String> words = videoTitle.split(' ');
+      words.shuffle();
+      query = words.take(3).join(' ');
+      print(query);
     }
-
     List<Video> video = await yt.search.getVideos(query);
 
     return video;

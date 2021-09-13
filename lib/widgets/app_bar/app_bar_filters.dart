@@ -1,5 +1,5 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:youtube_on_steroids/app/constants.dart';
 
 class CustomAppBarFilters extends StatelessWidget with PreferredSizeWidget {
   // const CustomAppBarFilters({Key key}) : super(key: key);
@@ -27,13 +27,20 @@ class CustomAppBarFilters extends StatelessWidget with PreferredSizeWidget {
               //TODO: Demo
               color: i == 0 ? Color(0xFF606060) : Colors.grey[300],
             ),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                '${filters[i]}',
-                style: TextStyle(
-                    fontSize: 16, color: i == 0 ? Colors.white : Colors.black),
-                textAlign: TextAlign.center,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .pushNamed(AppRoutes.SEARCH_RESULTS, arguments: filters[i]);
+              },
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${filters[i]}',
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: i == 0 ? Colors.white : Colors.black),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           );
