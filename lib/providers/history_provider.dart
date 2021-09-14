@@ -6,7 +6,7 @@ class HistoryProvider with ChangeNotifier {
 
   void create(YoutubePlaylist playlist) {
     history.add(playlist);
-    print('added successful');
+
     notifyListeners();
   }
 }

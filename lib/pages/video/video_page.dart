@@ -87,6 +87,7 @@ class _VideoPageState extends State<VideoPage> {
               child: CircularProgressIndicator(color: Colors.white),
             ),
           ),
+          Container()
         ],
       ),
     );

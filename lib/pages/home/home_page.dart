@@ -1,11 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:intl/intl.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
-import 'package:youtube_on_steroids/models/youtube_playlist.dart';
-import 'package:youtube_on_steroids/utils/playlist_preference.dart';
 import 'package:youtube_on_steroids/widgets/appbars/classic.dart' as c_appbar;
 import 'package:youtube_on_steroids/widgets/tag_filter.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/classic.dart';
@@ -55,7 +49,7 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             flex: 10,
             child: FutureBuilder(
-              future: getPlaylist(),
+              future: YoutubeExplodeFacade().fetchPlayList(_playlistUrl, _loadAmount, _skipAmount),
               builder: (BuildContext context, AsyncSnapshot snapshot){
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return Center(
@@ -86,49 +80,5 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
-
-  /// Returns playlist from network or disk if it is accessible
-  Future getPlaylist() async{
-    List<YoutubePlaylist> playlistModel = [];
-    List<String> playlistJson = [];
-
-    PlaylistPreference.setPlaylistKey(_playlistUrl);
-    await PlaylistPreference.init();
-
-    if(PlaylistPreference.getPlaylist() != null) { //checks if data available on disk TODO:: if internet is not available and data on disk available then : take it from disk
-      playlistJson = PlaylistPreference.getPlaylist();
-      for(int i=0; i < playlistJson.length; i++) {
-        playlistModel.add(YoutubePlaylist.fromMap(jsonDecode(playlistJson[i])));
-      }
-
-      return playlistModel;
-    }
-
-    final playlist = await YoutubeExplodeFacade().fetchPlayList(_playlistUrl, _loadAmount, _skipAmount);
-
-    await playlist.forEach((e) {
-      final current = YoutubePlaylist(
-        videoId: e.id.toString(),
-        title: e.title,
-        duration: e.duration.toString(),
-        author: e.author,
-        coverImage: e.thumbnails.highResUrl,
-        view: videoWatched(21000, 2400000),
-      );
-      playlistModel.add(current);
-      playlistJson.add(jsonEncode(current.toMap()));
-    });
-
-    PlaylistPreference.setPlaylist(playlistJson);
-
-    return playlistModel;
-  }
-
-  /// Generates random youtube watch
-  String videoWatched(int min, int max) {
-    final random = new Random();
-
-    return NumberFormat.compact().format(min + random.nextInt(max-min));
   }
 }
