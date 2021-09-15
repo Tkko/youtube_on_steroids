@@ -26,7 +26,7 @@ class _VideoPageState extends State<VideoPage> {
   @override
   void initState() {
     super.initState();
-    YoutubeExplodeFacade().getStreamUrl(ytModel.videoId).then((url){
+    YoutubeExplodeFacade().fetchStreamUrl(ytModel.videoId).then((url){
       _controller = VideoPlayerController.network(url)
         ..initialize().then((_) {
           setState(() {});

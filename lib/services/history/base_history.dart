@@ -4,9 +4,10 @@ abstract class BaseHistory {
   String key;
 
   BaseHistory() {
-    SharedPreferenceFacade.setKey(this.key);
+    SharedPreferenceFacade.setKey(key);
   }
 
-  void create(String data);
+  ///Abstract methods
+  Future create(String data);
   List<String> show();
 }

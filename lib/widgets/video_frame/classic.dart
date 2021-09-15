@@ -9,21 +9,20 @@ import 'package:youtube_on_steroids/services/history/video_view_history.dart';
 
 class Classic extends StatelessWidget {
   final YoutubePlaylist ytModel;
+  final BaseHistory history = VideoViewHistory();
 
-  const Classic({
+  Classic({
     @required this.ytModel,
   });
 
   @override
   Widget build(BuildContext context) {
-    BaseHistory history = VideoViewHistory();
-
     return Stack(
       children: [
         GestureDetector(
-          onTap: () {
+          onTap: () async{
             Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPage(ytModel: ytModel)));
-            history.create(jsonEncode(ytModel.toMap()));
+            await history.create(jsonEncode(ytModel.toMap()));
           },
           child: Container(
             width: double.infinity,

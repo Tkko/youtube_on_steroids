@@ -8,15 +8,14 @@ class VideoViewHistory extends BaseHistory {
   String key = 'history';
 
   @override
-  void create(data) {
+  Future create(String data) async{
     List<String> videoHistory = show();
 
     if(videoHistory.contains(data)) {
       videoHistory.removeWhere((element) => element == data);
     }
     videoHistory.insert(0, data);
-
-    SharedPreferenceFacade.setStringList(videoHistory);
+    await SharedPreferenceFacade.setStringList(videoHistory);
   }
 
   @override

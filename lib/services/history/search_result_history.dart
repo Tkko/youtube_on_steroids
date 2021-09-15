@@ -3,18 +3,17 @@ import 'package:youtube_on_steroids/services/history/base_history.dart';
 
 class SearchResultHistory extends BaseHistory {
   @override
-  String key = 'searchResult';
+  String key = 'searchResults';
 
   @override
-  void create(data) {
+  Future create(String data) async{
     List<String> searchHistory = show();
 
     if(searchHistory.contains(data)){
       searchHistory.removeWhere((element) => element == data);
     }
     searchHistory.insert(0, data);
-
-    SharedPreferenceFacade.setStringList(searchHistory);
+    await SharedPreferenceFacade.setStringList(searchHistory);
   }
 
   @override

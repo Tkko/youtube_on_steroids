@@ -51,9 +51,9 @@ class YoutubeSearch extends SearchDelegate {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) =>
                   ListTile(
-                      onTap: () {
-                        history.create(query);
-                        history.create(snapshot.data[index]);
+                      onTap: () async{
+                        await history.create(query);
+                        await history.create(snapshot.data[index]);
                         Navigator.popAndPushNamed(
                           context,
                           AppRoutes.RESULT_PAGE,
@@ -78,8 +78,8 @@ class YoutubeSearch extends SearchDelegate {
       itemBuilder: (context, index) =>
           ListTile(
             title: Text(data[index]),
-            onTap: () {
-              history.create(data[index]);
+            onTap: () async{
+              await history.create(data[index]);
               Navigator.popAndPushNamed(
                 context,
                 AppRoutes.RESULT_PAGE,

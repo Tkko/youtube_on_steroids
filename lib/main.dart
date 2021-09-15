@@ -25,6 +25,7 @@ void main() async {
 
   await init();
   await SharedPreferenceFacade.init();
+  // await SharedPreferenceFacade.clear();
 
   runApp(MyApp());
 }

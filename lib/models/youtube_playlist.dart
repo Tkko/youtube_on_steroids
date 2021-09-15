@@ -39,6 +39,7 @@ class YoutubePlaylist {
     );
   }
 
+  /// That parses 'duration' into readable time
   String durationTime() {
     String time = '';
     int i=0;

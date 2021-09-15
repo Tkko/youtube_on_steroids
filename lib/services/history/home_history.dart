@@ -1,24 +1,20 @@
 import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
+import 'package:youtube_on_steroids/pages/home/home_page.dart';
 import 'package:youtube_on_steroids/services/history/base_history.dart';
 
-class HomeHistory implements BaseHistory {
+class HomeHistory extends BaseHistory {
   @override
-  String key;
-
-  void setKey(String key) {
-    this.key = key;
-  }
+  String key = HomePage().url;
 
   @override
-  void create(String data) {
+  Future create(String data) async{
     List<String> homeHistory = show();
     homeHistory.add(data);
-    SharedPreferenceFacade.setStringList(homeHistory);
+    await SharedPreferenceFacade.setStringList(homeHistory);
   }
 
   @override
   List<String> show() {
-    print(SharedPreferenceFacade.getStringList());
     return SharedPreferenceFacade.getStringList() ?? [];
   }
 
