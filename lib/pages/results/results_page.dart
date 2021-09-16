@@ -2,7 +2,7 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
 import 'package:youtube_on_steroids/widgets/app_bar/custom_app_bar.dart';
-import 'package:youtube_on_steroids/widgets/video_cards/video_item.dart';
+import 'package:youtube_on_steroids/widgets/video_cards/home_video_card.dart';
 
 class ResultsPage extends StatefulWidget {
   const ResultsPage({Key key}) : super(key: key);

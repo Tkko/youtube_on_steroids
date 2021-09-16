@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
-import 'package:youtube_on_steroids/services/history.dart';
+import 'package:youtube_on_steroids/services/history/watch_history.dart';
 
 class VideoItem extends StatelessWidget {
   final Video video;
@@ -30,6 +31,9 @@ class VideoItem extends StatelessWidget {
     if (video.isLive) {
       return 'LIVE';
     }
+    if (video.duration == null) {
+      return 'Error';
+    }
     if (duration.inHours == 0) {
       String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
       String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
@@ -44,9 +48,9 @@ class VideoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        HistoryController.saveHistory(video.id.toString());
+        WatchHistory().saveHistory(video);
         Navigator.of(context)
-            .pushNamed(AppRoutes.SINGLE_VIDEO, arguments: video);
+            .pushNamed(AppRoutes.SINGLE_VIDEO, arguments: video.id);
       },
       child: Column(
         children: <Widget>[
@@ -101,7 +105,7 @@ class VideoItem extends StatelessWidget {
                 ),
               ),
               subtitle: Text(
-                '${video.author} • ${video.engagement.viewCount} views • ${video.publishDate}',
+                '${video.author} • ${NumberFormat.compact().format(video.engagement.viewCount)}  views • ${video.publishDate}',
                 style: TextStyle(color: Colors.grey[700], fontSize: 12),
               ),
             ),

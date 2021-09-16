@@ -1,8 +1,9 @@
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/services/history.dart';
+import 'package:youtube_on_steroids/cubits/history_cubit.dart';
 import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
-import 'package:youtube_on_steroids/widgets/video_cards/history_item.dart';
+import 'package:youtube_on_steroids/services/history/watch_history.dart';
+import 'package:youtube_on_steroids/widgets/video_cards/history_video_card.dart';
+import 'dart:io';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage();
@@ -12,10 +13,21 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  Future<List<Video>> getHistoryVideos() async {
-    List<String> history = await HistoryController.getHistory();
-    List<Video> historyVideos = await YoutubeHelper.getVideosFromList(history);
-    return historyVideos;
+  // Future<List<Video>> getHistoryVideos() async {
+  //   List<String> history = await HistoryController.getHistory();
+  //   List<Video> historyVideos = await YoutubeHelper.getVideosFromList(history);
+  //   return historyVideos;
+  // }
+
+  @override
+  void didChangeDependencies() async {
+    getHistory(context);
+    super.didChangeDependencies();
+  }
+
+  void getHistory(BuildContext context) {
+    final cubit = BlocProvider.of<HistoryCubit>(context);
+    cubit.getHistory();
   }
 
   @override
@@ -31,47 +43,63 @@ class _HistoryPageState extends State<HistoryPage> {
               maxLines: 3,
               textAlign: TextAlign.center,
             ),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                WatchHistory().deleteHistory();
+                final cubit = BlocProvider.of<HistoryCubit>(context);
+                cubit.getHistory();
+              });
+            },
           ),
         ),
       );
     }
 
-    return Scaffold(
-      body: Center(
-          child: FutureBuilder(
-        future: getHistoryVideos(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<Video> history = snapshot.data;
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    _buildButton('CLEAR ALL WATCH HISTORY'),
-                    _buildButton('PAUSE WATCH HISTORY'),
-                    _buildButton('MANAGE ALL HISTORY'),
-                  ],
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: history.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          HistoryItem(video: history[index]),
-                        ],
+    return Container(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _buildButton('CLEAR  ALL WATCH HISTORY'),
+              _buildButton('MANAGE HISTORY'),
+            ],
+          ),
+          BlocConsumer<HistoryCubit, HistoryState>(
+            listener: (context, state) {
+              if (state is HistoryError) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.message)));
+              }
+            },
+            builder: (context, state) {
+              print('$state');
+              if (state is HistoryInital) {
+                return Text('init');
+              } else if (state is HistoryLoading) {
+                return Center(child: Text('No Watch History Data Available'));
+              } else if (state is HistoryLoaded) {
+                return state.videos != []
+                    ? Expanded(
+                        child: ListView.builder(
+                            itemCount: state.videos.length,
+                            itemBuilder: (context, index) {
+                              return HistoryVideoCard(
+                                  item: state.videos[index]);
+                            }),
+                      )
+                    : Center(
+                        child: Text('No History Data'),
                       );
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-          return CircularProgressIndicator();
-        },
-      )),
+              } else if (state is HistoryConverted) {
+                return Center(
+                  child: Text(state.videos.first.title.toString()),
+                );
+              } else
+                return Center(child: Text('$state'));
+            },
+          ),
+        ],
+      ),
     );
   }
 }

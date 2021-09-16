@@ -54,7 +54,7 @@ class _AppViewState extends State<AppView> {
             return MaterialApp(
               title: 'YoutubeOnSteroids',
               navigatorKey: appNavigatorKey,
-              debugShowCheckedModeBanner: false,
+              // debugShowCheckedModeBanner: false,
               theme: appThemes.theme,
               routes: appRoutes,
               initialRoute: appPage(state),

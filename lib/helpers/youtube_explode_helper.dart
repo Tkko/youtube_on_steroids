@@ -56,20 +56,16 @@ class YoutubeHelper {
     return channel;
   }
 
-  static Future<List<Video>> getVideoSuggestions(
-      List<String> keywords, String videoTitle) async {
+  static Future<List<Video>> getVideoSuggestions(String videoTitle) async {
     var yt = YoutubeExplode();
     String query;
     //TODO:: remove video same as current
-    if (keywords.isNotEmpty) {
-      keywords.shuffle();
-      query = keywords.first;
-    } else {
-      List<String> words = videoTitle.split(' ');
-      words.shuffle();
-      query = words.take(3).join(' ');
-      print(query);
-    }
+
+    List<String> words = videoTitle.split(' ');
+    words.shuffle();
+    query = words.take(3).join(' ');
+    print(query);
+
     List<Video> video = await yt.search.getVideos(query);
 
     return video;

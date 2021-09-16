@@ -5,9 +5,12 @@ import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/services/history/search_history.dart';
 import 'package:youtube_on_steroids/services/search.dart';
 import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
-import 'package:youtube_on_steroids/widgets/video_cards/video_item.dart';
+import 'package:youtube_on_steroids/widgets/video_cards/home_video_card.dart';
+import 'package:youtube_on_steroids/widgets/video_player/video_player_widget.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class VideoPage extends StatefulWidget {
   const VideoPage();
@@ -17,13 +20,15 @@ class VideoPage extends StatefulWidget {
 
 class _VideoPageState extends State<VideoPage> {
   VideoPlayerController _controller;
-  // VideoId videoId;
+  VideoId videoId;
   String videoUrl = '';
   bool _isVideoLoading = true;
   bool _isVideoLoaded = true;
-  bool _isControlVisible = true;
+  // bool _isControlVisible = true;
   String _errorMessage;
   Video _video;
+  DateTime daysAgo;
+  List<String> searchHist;
 
   void initPlayer() async {
     print('went into initPlayer');
@@ -32,9 +37,10 @@ class _VideoPageState extends State<VideoPage> {
       await _controller.initialize().then((value) {
         setState(() {
           _isVideoLoaded = true;
-          _isControlVisible = true;
+          // _isControlVisible = true;
         });
       });
+      searchHist = await SearchHistory.getSearchHistory();
       print('${_controller.value.isInitialized}');
       print('waiting for init in controller');
     } else {
@@ -44,7 +50,8 @@ class _VideoPageState extends State<VideoPage> {
   }
 
   void getUrl() async {
-    _video = ModalRoute.of(context).settings.arguments;
+    videoId = ModalRoute.of(context).settings.arguments;
+    _video = await YoutubeHelper.getVideo(videoId);
 
     if (_video.id == null) {
       _isVideoLoading = false;
@@ -61,7 +68,7 @@ class _VideoPageState extends State<VideoPage> {
         initPlayer();
         yt.close();
         // setState(() {});
-      } on VideoUnplayableException catch (e) {
+      } on Exception catch (e) {
         print('$e');
         setState(() {
           _isVideoLoading = false;
@@ -85,15 +92,78 @@ class _VideoPageState extends State<VideoPage> {
     getUrl();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    if (_controller != null) {
-      _controller.dispose();
-      _isVideoLoading = false;
-      _isControlVisible = false;
-    }
+  void showDescriptionModal(context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(20),
+          ),
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        context: context,
+        builder: (BuildContext context) {
+          return Column(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 50,
+                    child: Divider(
+                      height: 15,
+                      thickness: 5,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(left: 24),
+                          child: Text(
+                            'Description',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[700]),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 24),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.grey[600],
+                          ),
+                          iconSize: 24,
+                        ),
+                      )
+                    ],
+                  ),
+                  Divider(
+                    thickness: 2,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: SingleChildScrollView(
+                      child: Text(_video.description),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          );
+        });
   }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   if (_controller != null) {
+  //     _controller.dispose();
+  //     _isVideoLoading = false;
+  //     _isControlVisible = false;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,55 +185,11 @@ class _VideoPageState extends State<VideoPage> {
       );
     }
 
-    Widget _buildPlayerStack() {
-      return Stack(children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              _isControlVisible = !_isControlVisible;
-            });
-          },
-          child: AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          ),
-        ),
-        Positioned.fill(
-          child: Align(
-            alignment: Alignment.center,
-            child: AnimatedOpacity(
-              opacity: _isControlVisible ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 300),
-              child: Container(
-                child: IconButton(
-                    constraints: BoxConstraints(maxHeight: 50, maxWidth: 50),
-                    padding: EdgeInsets.zero,
-                    iconSize: 70,
-                    onPressed: _controller.value != null
-                        ? () {
-                            setState(() {
-                              _controller.value.isPlaying
-                                  ? _controller.pause()
-                                  : _controller.play();
-                            });
-                          }
-                        : () {},
-                    icon: Icon(
-                      _controller.value != null
-                          ? _controller.value.isPlaying
-                              ? Icons.pause
-                              : Icons.play_arrow
-                          : Icons.question_answer_rounded,
-                      color: Colors.white,
-                    )),
-              ),
-            ),
-          ),
-        )
-      ]);
-    }
-
-    Widget _buildInfoBlock(channel) {
+    Widget _buildInfoBlock(
+      channel,
+    ) {
+      daysAgo = new DateTime.now()
+          .subtract(new Duration(days: _video.publishDate.day));
       return Column(
         children: <Widget>[
           ListTile(
@@ -172,13 +198,17 @@ class _VideoPageState extends State<VideoPage> {
               style: TextStyle(fontSize: 18),
             ),
             subtitle: Text(
-              '${_video.engagement.viewCount} views • ${_video.publishDate} day ago',
+              '${NumberFormat.compact().format(_video.engagement.viewCount)}  views • ${timeago.format(daysAgo)}',
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
-            trailing: Icon(
-              Icons.keyboard_arrow_down_sharp,
+            trailing: IconButton(
+              onPressed: () {
+                showDescriptionModal(context);
+              },
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.keyboard_arrow_down_sharp),
               color: Colors.black,
-              size: 24,
+              iconSize: 24,
             ),
           ),
           Container(
@@ -186,10 +216,10 @@ class _VideoPageState extends State<VideoPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildButton(
-                    Icons.thumb_up_outlined, '${_video.engagement.likeCount}'),
+                _buildButton(Icons.thumb_up_outlined,
+                    '${NumberFormat.compact().format(_video.engagement.likeCount)}'),
                 _buildButton(Icons.thumb_down_outlined,
-                    '${_video.engagement.dislikeCount}'),
+                    '${NumberFormat.compact().format(_video.engagement.dislikeCount)}'),
                 _buildButton(Icons.share_outlined, "Share"),
                 _buildButton(Icons.cloud_download_outlined, "Download"),
                 _buildButton(Icons.playlist_add_outlined, "Save"),
@@ -215,10 +245,12 @@ class _VideoPageState extends State<VideoPage> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 14),
                     ),
-                    subtitle: Text(
-                      "${NumberFormat.compact().format(channel.subscribersCount)} subscribers",
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                    ),
+                    subtitle: channel.subscribersCount != null
+                        ? Text(
+                            "${NumberFormat.compact().format(channel.subscribersCount)} subscribers",
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 12))
+                        : Container(),
                   ),
                 ),
                 TextButton(
@@ -238,36 +270,6 @@ class _VideoPageState extends State<VideoPage> {
               textAlign: TextAlign.start,
             ),
           ),
-          // Container(
-          //   decoration: BoxDecoration(
-          //     border: Border(
-          //       bottom: BorderSide(color: Colors.grey, width: 0.5),
-          //     ),
-          //   ),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Expanded(
-          //         child: ListTile(
-          //           title: Row(
-          //             children: [
-          //               Text(
-          //                 'Comments',
-          //                 overflow: TextOverflow.ellipsis,
-          //                 style: TextStyle(fontSize: 14),
-          //               ),
-          //               Text(
-          //                 ' • ${comment.length}',
-          //                 style:
-          //                     TextStyle(color: Colors.grey[600], fontSize: 14),
-          //               )
-          //             ],
-          //           ),
-          //           trailing: Icon(Icons.unfold_more),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       );
     }
@@ -306,7 +308,7 @@ class _VideoPageState extends State<VideoPage> {
         actions: [
           IconButton(
               onPressed: () {
-                showSearch(context: context, delegate: Search());
+                showSearch(context: context, delegate: Search(searchHist));
               },
               icon: Icon(
                 Icons.search,
@@ -318,9 +320,8 @@ class _VideoPageState extends State<VideoPage> {
       body: SafeArea(
         child: FutureBuilder(
           future: Future.wait([
-            YoutubeHelper.getChannelInfo(_video.id),
-            YoutubeHelper.getVideoSuggestions(
-                _video.keywords, _video.title.toString()),
+            YoutubeHelper.getChannelInfo(videoId),
+            YoutubeHelper.getVideoSuggestions(videoId.toString()),
           ]),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -329,7 +330,7 @@ class _VideoPageState extends State<VideoPage> {
                   _isVideoLoading
                       ? _isVideoLoaded
                           ? _controller.value.isInitialized
-                              ? _buildPlayerStack()
+                              ? VideoPlayerWidget(_controller)
                               : CircularProgressIndicator()
                           : Stack(children: [
                               Container(
@@ -370,8 +371,8 @@ class _VideoPageState extends State<VideoPage> {
                 ],
               );
             }
-            print('snapshot error : ${snapshot.error}');
-            print('Video : ${_video.author} - ${_video.title}');
+            // print('snapshot error : ${snapshot.error}');
+            // print('Video : ${_video.author} - ${_video.title}');
             return Center(
               child: CircularProgressIndicator(),
             );

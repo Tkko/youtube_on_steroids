@@ -2,36 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
-import 'package:youtube_on_steroids/services/history.dart';
+import 'package:youtube_on_steroids/models/history_item.dart';
+import 'package:youtube_on_steroids/services/history/watch_history.dart';
 
-class HistoryItem extends StatelessWidget {
-  final Video video;
-  HistoryItem({
-    this.video,
+class HistoryVideoCard extends StatelessWidget {
+  final HistoryItem item;
+  HistoryVideoCard({
+    this.item,
   });
+  final video = {
+    'isLive': false,
+  };
 
-  String _durationDisplay(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    if (video.isLive) {
-      return 'LIVE';
-    }
-    if (duration.inHours == 0) {
-      String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-      String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-      return "$twoDigitMinutes:$twoDigitSeconds";
-    }
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-  }
+  // String _durationDisplay(Duration duration) {
+  //   String twoDigits(int n) => n.toString().padLeft(2, "0");
+  //   // if (video.isLive) {
+  //   // return 'LIVE';
+  //   // }
+  //   if (duration.inHours == 0) {
+  //     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+  //     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+  //     return "$twoDigitMinutes:$twoDigitSeconds";
+  //   }
+  //   String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+  //   String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+  //   return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  // }
 
   @override
   Widget build(BuildContext context) {
+    print(item.thumbnailUrl);
     return InkWell(
         onTap: () {
-          HistoryController.saveHistory(video.id.toString());
-          Navigator.of(context)
-              .popAndPushNamed(AppRoutes.SINGLE_VIDEO, arguments: video);
+          // WatchHistory().saveHistory(video);
+          Navigator.of(context).pushNamed(AppRoutes.SINGLE_VIDEO,
+              arguments: VideoId.fromString(item.videoId));
         },
         child: Container(
           width: double.infinity,
@@ -46,7 +51,7 @@ class HistoryItem extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 16.0 / 9.0,
                       child: Image.network(
-                        video.thumbnails.lowResUrl,
+                        item.thumbnailUrl,
                         fit: BoxFit.fitWidth,
                       ),
                     ),
@@ -56,7 +61,7 @@ class HistoryItem extends StatelessWidget {
                     right: 1,
                     child: Container(
                       height: 16,
-                      color: video.isLive ? Colors.red : Colors.black87,
+                      color: item.isLive ? Colors.red : Colors.black87,
                       padding: EdgeInsets.symmetric(
                         vertical: 1,
                         horizontal: 4,
@@ -64,8 +69,7 @@ class HistoryItem extends StatelessWidget {
                       margin: EdgeInsets.all(5),
                       child: FittedBox(
                         child: Text(
-                          _durationDisplay(video.duration),
-                          // '${duration.inHours}',
+                          item.duration,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 26,
@@ -87,17 +91,18 @@ class HistoryItem extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '${video.title}',
+                        '${item.title}',
+                        // 'hielo',
                         maxLines: 3,
                         // softWrap: false,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text('${video.author}',
+                      Text('${item.channelName}',
+                          // 'hola',
                           textAlign: TextAlign.start,
                           style:
                               TextStyle(color: Colors.grey[700], fontSize: 12)),
-                      Text(
-                          '${NumberFormat.compact().format(video.engagement.viewCount)} views',
+                      Text('${NumberFormat.compact().format(item.views)} views',
                           textAlign: TextAlign.start,
                           style:
                               TextStyle(color: Colors.grey[700], fontSize: 12))

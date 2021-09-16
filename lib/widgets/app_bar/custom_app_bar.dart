@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/services/history/search_history.dart';
 import 'package:youtube_on_steroids/services/search.dart';
 import 'package:youtube_on_steroids/widgets/app_bar/app_bar_filters.dart';
 
@@ -21,6 +22,16 @@ class CustomAppBar extends StatefulWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
+  List<String> searchHist;
+  @override
+  void initState() {
+    super.initState();
+    getHistory();
+  }
+
+  void getHistory() async {
+    searchHist = await SearchHistory.getSearchHistory();
+  }
   // TextEditingController _searchQueryController = TextEditingController();
 
   @override
@@ -29,7 +40,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       actions: [
         IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: Search());
+              showSearch(context: context, delegate: Search(searchHist));
             },
             icon: Icon(
               Icons.search,
