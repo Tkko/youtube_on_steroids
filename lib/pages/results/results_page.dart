@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:intl/intl.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
@@ -40,7 +37,7 @@ class _ResultsPageState extends State<ResultsPage> {
                 itemBuilder: (context, index) {
 
                   return SmallVideoCard(
-                    playlist: YoutubePlaylist(
+                    ytModel: YoutubePlaylist(
                       videoId: snapshot.data[index].id.toString(),
                       title:  snapshot.data[index].title,
                       duration: snapshot.data[index].duration.toString(),

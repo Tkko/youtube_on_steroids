@@ -2,7 +2,7 @@ import 'package:youtube_on_steroids/app/app.dart';
 
 class TagFilter extends StatelessWidget {
   /// That is here for only demonstration purpose!
-  List<String> tags = ['All', 'Music', 'Game', 'Food', 'Animal', 'Other'];
+  final List<String> tags = ['All', 'Music', 'Game', 'Food', 'Animal', 'Other'];
 
   @override
   Widget build(BuildContext context) {

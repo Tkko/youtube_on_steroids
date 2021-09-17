@@ -5,8 +5,8 @@ import 'package:youtube_on_steroids/pages/error_page.dart';
 import 'package:youtube_on_steroids/pages/home/home_page.dart';
 import 'package:youtube_on_steroids/pages/results/results_page.dart';
 import 'package:youtube_on_steroids/pages/splash_page.dart';
-import 'package:youtube_on_steroids/pages/video/video_page.dart';
 import 'package:youtube_on_steroids/pages/wrapper/wrapper_page.dart';
+import 'package:youtube_on_steroids/providers/history_provider.dart';
 
 class AppView extends StatefulWidget {
   @override
@@ -52,14 +52,17 @@ class _AppViewState extends State<AppView> {
         theme: appThemes.theme,
         child: BlocBuilder<AppCubit, AppState>(
           builder: (context, state) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'SideSwap',
-              navigatorKey: appNavigatorKey,
-              theme: appThemes.theme,
-              routes: appRoutes,
-              initialRoute: appPage(state),
-              home: const SplashPage(),
+            return ChangeNotifierProvider<HistoryProvider>(
+              create: (context) => HistoryProvider(),
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'SideSwap',
+                navigatorKey: appNavigatorKey,
+                theme: appThemes.theme,
+                routes: appRoutes,
+                initialRoute: appPage(state),
+                home: const SplashPage(),
+              ),
             );
           },
         ),

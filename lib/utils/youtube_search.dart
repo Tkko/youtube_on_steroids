@@ -1,18 +1,12 @@
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/services/history/base_history.dart';
 import 'package:youtube_on_steroids/services/history/search_result_history.dart';
 
 class YoutubeSearch extends SearchDelegate {
-  List<String> suggestions;
   BaseHistory history = SearchResultHistory();
-
-  Future currentResult(String key) async {
-    List<String> currentQuerySuggestions = await YoutubeExplode().search.getQuerySuggestions(key);
-
-    return currentQuerySuggestions;
-  }
+  YoutubeExplodeFacade ytFacade = YoutubeExplodeFacade();
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -35,7 +29,7 @@ class YoutubeSearch extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
-      future: currentResult(query),
+      future: ytFacade.fetchKeywordSuggestion(query),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.connectionState == ConnectionState.waiting){
           return Center(

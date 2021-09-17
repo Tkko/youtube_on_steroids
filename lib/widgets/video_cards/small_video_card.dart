@@ -3,10 +3,10 @@ import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/widgets/video_frame/classic.dart';
 
 class SmallVideoCard extends StatelessWidget {
-  final YoutubePlaylist playlist;
+  final YoutubePlaylist ytModel;
 
   SmallVideoCard({
-    @required this.playlist
+    @required this.ytModel
   });
 
   @override
@@ -28,7 +28,7 @@ class SmallVideoCard extends StatelessWidget {
                     width: double.infinity,
                     height: 120.h,
                     child: Classic(
-                      ytModel: playlist,
+                      ytModel: ytModel,
                     ),
                   ),
                 ),
@@ -40,13 +40,13 @@ class SmallVideoCard extends StatelessWidget {
                   title: RichText(
                     text: TextSpan(
                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
-                      text: playlist.title,
+                      text: ytModel.title,
                     ),
                   ),
                   subtitle: RichText(
                     text: TextSpan(
                       style: TextStyle(color: Colors.grey[600],  fontSize: 13),
-                      text: '${playlist.author}\n${playlist.view} watching',
+                      text: '${ytModel.author}\n${ytModel.view} watching',
                     ),
                   ),
                   trailing: InkWell(

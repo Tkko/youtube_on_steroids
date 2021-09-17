@@ -38,21 +38,4 @@ class YoutubePlaylist {
       view: map['view'] as String,
     );
   }
-
-  /// That parses 'duration' into readable time
-  String durationTime() {
-    String time = '';
-    int i=0;
-    while(duration[i] == '0' || duration[i] == ':'){
-      i++;
-    }
-    while(duration[i] != '.'){
-      time += duration[i];
-      i++;
-    }
-
-    return time;
-  }
-
-
 }

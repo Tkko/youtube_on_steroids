@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/pages/video/video_page.dart';
+import 'package:youtube_on_steroids/providers/history_provider.dart';
 import 'package:youtube_on_steroids/services/history/base_history.dart';
 import 'package:youtube_on_steroids/services/history/video_view_history.dart';
+import 'package:youtube_on_steroids/utils/helper.dart';
 
 class Classic extends StatelessWidget {
   final YoutubePlaylist ytModel;
   final BaseHistory history = VideoViewHistory();
+  final Helper helper = Helper();
 
   Classic({
     @required this.ytModel,
@@ -17,12 +19,15 @@ class Classic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+
     return Stack(
       children: [
         GestureDetector(
           onTap: () async{
             Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPage(ytModel: ytModel)));
             await history.create(jsonEncode(ytModel.toMap()));
+            historyProvider.getHistory();
           },
           child: Container(
             width: double.infinity,
@@ -38,7 +43,7 @@ class Classic extends StatelessWidget {
             ),
             margin: const EdgeInsets.only(right: 15.0, bottom: 10.0),
             padding: const EdgeInsets.all(2),
-            child: Text(ytModel.durationTime(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text(helper.durationToTime(ytModel.duration), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ),
       ],

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
 import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/services/history/base_history.dart';

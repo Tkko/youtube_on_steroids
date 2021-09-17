@@ -1,7 +1,5 @@
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
-import 'package:youtube_on_steroids/pages/home/home_page.dart';
 import 'package:youtube_on_steroids/utils/youtube_search.dart';
 import 'package:youtube_on_steroids/widgets/appbars/i_appbar.dart';
 

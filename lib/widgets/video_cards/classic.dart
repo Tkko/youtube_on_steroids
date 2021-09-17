@@ -1,5 +1,4 @@
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/widgets/video_frame/classic.dart' as cs_frame;
 

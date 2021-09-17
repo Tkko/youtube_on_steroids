@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/pages/history/history_page.dart';
 import 'package:youtube_on_steroids/pages/home/home_page.dart';
-import 'package:youtube_on_steroids/providers/history_provider.dart';
 
 class WrapperPage extends StatefulWidget {
   const WrapperPage();
