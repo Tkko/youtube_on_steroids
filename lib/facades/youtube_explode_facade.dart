@@ -17,14 +17,10 @@ class YoutubeExplodeFacade {
   }
 
   Future fetchSearchResults(String keyword) async {
-    final keywords = await yt.search.getVideos(keyword).timeout(Duration(seconds: 8));
-
-    return keywords;
+    return await yt.search.getVideos(keyword).timeout(Duration(seconds: 8));
   }
 
-  Future fetchKeywordSuggestion(String keyword) async{
-    List<String> currentQuerySuggestions = await YoutubeExplode().search.getQuerySuggestions(keyword);
-
-    return currentQuerySuggestions;
+  Future<List<String>> fetchKeywordSuggestion(String keyword) async{
+    return await YoutubeExplode().search.getQuerySuggestions(keyword);
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:video_player/video_player.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
@@ -7,8 +6,6 @@ import 'package:youtube_on_steroids/pages/video/into_video.dart';
 import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/appbars/classic.dart' as app_bar;
 import 'package:youtube_on_steroids/widgets/video_cards/classic.dart';
-import 'package:youtube_on_steroids/widgets/video_tools/play_pause.dart';
-import 'package:youtube_on_steroids/widgets/video_tools/setting.dart';
 
 class VideoPage extends StatefulWidget {
   final YoutubePlaylist ytModel;
@@ -22,7 +19,6 @@ class VideoPage extends StatefulWidget {
 }
 
 class _VideoPageState extends State<VideoPage> {
-  VideoPlayerController _controller;
   final YoutubePlaylist ytModel;
   final Helper helper = Helper();
   bool darkFrame = false;

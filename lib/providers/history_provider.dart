@@ -6,7 +6,6 @@ class HistoryProvider with ChangeNotifier {
   BaseHistory videoView = VideoViewHistory();
   List<String> history = VideoViewHistory().show();
 
-
   void getHistory() {
     history = videoView.show();
     notifyListeners();

@@ -34,7 +34,9 @@ class _IntoVideoState extends State<IntoVideo> {
     YoutubeExplodeFacade().fetchStreamUrl(ytModel.videoId).then((url){
       _videoController = VideoPlayerController.network(url)
         ..initialize().then((_) {
-          setState(() {});
+          setState(() {
+
+          });
           _videoController.play();
         });
     });
@@ -85,19 +87,16 @@ class _IntoVideoState extends State<IntoVideo> {
                   Container(
                     width: deviceWidth,
                     height: 66.666.h,
-                    // color: Colors.red,
                     child: Setting(),
                   ),
                   Container(
                     width: deviceWidth,
                     height: 66.666.h,
-                    // color: Colors.blue,
                     child: PlayPause(playVideo, _videoController.value.isPlaying),
                   ),
                   Container(
                     width: deviceWidth,
                     height: 66.666.h,
-                    // color: Colors.pink,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Row(
@@ -128,11 +127,11 @@ class _IntoVideoState extends State<IntoVideo> {
                               ),
                             ),
                           ),
-                          Expanded(child:
-                          IconButton(
-                            onPressed: (){},
-                            icon: Icon(Icons.fullscreen, color: Colors.white,),
-                          ),
+                          Expanded(
+                            child: IconButton(
+                              onPressed: (){},
+                              icon: Icon(Icons.fullscreen, color: Colors.white,),
+                            ),
                           ),
 
                         ],

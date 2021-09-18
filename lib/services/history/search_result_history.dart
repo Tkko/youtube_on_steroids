@@ -1,4 +1,3 @@
-import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
 import 'package:youtube_on_steroids/services/history/base_history.dart';
 
 class SearchResultHistory extends BaseHistory {
@@ -13,11 +12,11 @@ class SearchResultHistory extends BaseHistory {
       searchHistory.removeWhere((element) => element == data);
     }
     searchHistory.insert(0, data);
-    await SharedPreferenceFacade.setStringList(searchHistory);
+    await setStringList(searchHistory);
   }
 
   @override
   List<String> show() {
-    return SharedPreferenceFacade.getStringList() ?? [];
+    return getStringList() ?? [];
   }
 }
