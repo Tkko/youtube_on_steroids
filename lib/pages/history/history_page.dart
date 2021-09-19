@@ -1,6 +1,7 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/cubits/history_cubit.dart';
 import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
+import 'package:youtube_on_steroids/services/history/search_history.dart';
 import 'package:youtube_on_steroids/services/history/watch_history.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/history_video_card.dart';
 import 'dart:io';
@@ -32,7 +33,49 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _buildButton(String text) {
+    Widget _settingsDialog(context) {
+      bool searchHistorySwitch = false;
+      bool watchHistorySwitch;
+      bool allHistorySwitch;
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 50,
+        backgroundColor: Colors.white,
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Container(
+              alignment: Alignment.topCenter,
+              child: Text('History Settings',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ), // bottom part
+            Container(
+                child: Center(
+                    child:
+                        Text('Dialog not working as intended...'))), // top part
+          ],
+        ),
+      );
+    }
+
+    ScaffoldFeatureController _showSnackBar({
+      String text,
+      Duration duration = const Duration(seconds: 3),
+    }) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(text),
+          duration: duration,
+          action: SnackBarAction(
+            onPressed: () {},
+            label: 'Dismiss',
+            textColor: Colors.yellow[100],
+          ),
+        ),
+      );
+    }
+
+    Widget _buildButton(String text, Function function) {
       return Expanded(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 9.8, horizontal: 7.98),
@@ -43,13 +86,7 @@ class _HistoryPageState extends State<HistoryPage> {
               maxLines: 3,
               textAlign: TextAlign.center,
             ),
-            onPressed: () {
-              setState(() {
-                WatchHistory().deleteHistory();
-                final cubit = BlocProvider.of<HistoryCubit>(context);
-                cubit.getHistory();
-              });
-            },
+            onPressed: function,
           ),
         ),
       );
@@ -60,8 +97,29 @@ class _HistoryPageState extends State<HistoryPage> {
         children: [
           Row(
             children: [
-              _buildButton('CLEAR  ALL WATCH HISTORY'),
-              _buildButton('MANAGE HISTORY'),
+              _buildButton('CLEAR  ALL WATCH HISTORY', () {
+                setState(() {
+                  WatchHistory().deleteHistory();
+                  final cubit = BlocProvider.of<HistoryCubit>(context);
+                  cubit.getHistory();
+                });
+                _showSnackBar(
+                  text: 'Watch History Cleared',
+                );
+              }),
+              _buildButton('CLEAR ALL SEARCH HISTORY', () {
+                setState(() {
+                  SearchHistory.clearSearchHistory();
+                });
+                _showSnackBar(text: 'Search History Cleared Successfully');
+              }),
+              _buildButton('HISTORY SETTINGS', () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return _settingsDialog(context);
+                    });
+              }),
             ],
           ),
           BlocConsumer<HistoryCubit, HistoryState>(
@@ -72,13 +130,16 @@ class _HistoryPageState extends State<HistoryPage> {
               }
             },
             builder: (context, state) {
-              print('$state');
               if (state is HistoryInital) {
                 return Text('init');
               } else if (state is HistoryLoading) {
-                return Center(child: Text('No Watch History Data Available'));
+                return Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.red[700],
+                ));
               } else if (state is HistoryLoaded) {
-                return state.videos != []
+                print(state.videos);
+                return state.videos.isNotEmpty
                     ? Expanded(
                         child: ListView.builder(
                             itemCount: state.videos.length,
@@ -88,7 +149,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             }),
                       )
                     : Center(
-                        child: Text('No History Data'),
+                        child: Text('No Watch History Data Available'),
                       );
               } else if (state is HistoryConverted) {
                 return Center(

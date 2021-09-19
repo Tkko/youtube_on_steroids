@@ -18,8 +18,6 @@ class HistoryLoaded extends HistoryState {
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
-    print('$o');
-    print('videos in history loaded : $videos');
     return o is HistoryLoaded && o.videos == videos;
   }
 

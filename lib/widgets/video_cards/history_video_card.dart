@@ -31,7 +31,6 @@ class HistoryVideoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(item.thumbnailUrl);
     return InkWell(
         onTap: () {
           // WatchHistory().saveHistory(video);

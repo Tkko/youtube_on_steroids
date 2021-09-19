@@ -8,6 +8,16 @@ class YoutubeHelper {
     return video;
   }
 
+  static Future<String> getStreamUrl(videoId) async {
+    var yt = YoutubeHttpClient();
+    var streamInfo = await StreamsClient(yt).getManifest(videoId);
+    var muxed = streamInfo.muxed.sortByVideoQuality().first;
+    final videoUrl = muxed.url.toString();
+    yt.close();
+
+    return videoUrl;
+  }
+
   static Future<List<Video>> getVideosFromList(list) async {
     List<Video> videos = [];
     for (var videoId in list) {

@@ -1,11 +1,13 @@
 // import 'package:http/http.dart' as http;
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
 import 'package:youtube_on_steroids/services/history/search_history.dart';
+import 'package:youtube_on_steroids/services/history/watch_history.dart';
 import 'package:youtube_on_steroids/services/search.dart';
 import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/home_video_card.dart';
@@ -37,7 +39,6 @@ class _VideoPageState extends State<VideoPage> {
       await _controller.initialize().then((value) {
         setState(() {
           _isVideoLoaded = true;
-          // _isControlVisible = true;
         });
       });
       searchHist = await SearchHistory.getSearchHistory();
@@ -52,21 +53,18 @@ class _VideoPageState extends State<VideoPage> {
   void getUrl() async {
     videoId = ModalRoute.of(context).settings.arguments;
     _video = await YoutubeHelper.getVideo(videoId);
-
     if (_video.id == null) {
       _isVideoLoading = false;
     } else {
       setState(() {
         _isVideoLoading = true;
       });
-      var yt = YoutubeHttpClient();
       try {
-        var streamInfo = await StreamsClient(yt).getManifest(_video.id);
-        var muxed = streamInfo.muxed.sortByVideoQuality().first;
-        print('got stream Info');
-        videoUrl = muxed.url.toString();
-        initPlayer();
-        yt.close();
+        await YoutubeHelper.getStreamUrl(videoId).then((value) {
+          videoUrl = value;
+          initPlayer();
+        });
+
         // setState(() {});
       } on Exception catch (e) {
         print('$e');
@@ -77,19 +75,21 @@ class _VideoPageState extends State<VideoPage> {
       }
     }
   }
-  //TODO:: comments not working;
 
-  // Future<CommentsList> getCommentInfo() async {
-  //   var yt = YoutubeHttpClient();
-  //   var comments = await CommentsClient(yt).getComments(_video);
-  //   print(comments.first);
-  //   return comments;
-  // }
+  @override
+  void initState() {
+    super.initState();
+    if (_controller != null && _controller.value.isInitialized) {
+      _controller.dispose();
+    }
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getUrl();
+    if (_controller == null || _controller.value == null) {
+      getUrl();
+    }
   }
 
   void showDescriptionModal(context) {
@@ -155,18 +155,22 @@ class _VideoPageState extends State<VideoPage> {
           );
         });
   }
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   if (_controller != null) {
-  //     _controller.dispose();
-  //     _isVideoLoading = false;
-  //     _isControlVisible = false;
-  //   }
-  // }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_controller != null) {
+      _controller.dispose();
+      print('DISPOSED========DISPOSED=====DISPOSED');
+      _isVideoLoading = false;
+      // _isControlVisible = false;
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final deviceOrientation = MediaQuery.of(context).orientation;
     Widget _buildButton(IconData icon, String text) {
       return Column(
         children: <Widget>[
@@ -282,41 +286,52 @@ class _VideoPageState extends State<VideoPage> {
             shrinkWrap: true,
             itemCount: video.length,
             itemBuilder: (context, index) {
-              return VideoItem(video: video[index]);
+              return GestureDetector(
+                  onTap: () {
+                    WatchHistory().saveHistory(video[index]);
+                    Navigator.of(context).popAndPushNamed(
+                        AppRoutes.SINGLE_VIDEO,
+                        arguments: video[index].id);
+                  },
+                  child: VideoItem(video: video[index]));
             }),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black87,
-        leadingWidth: 0,
-        titleSpacing: 0,
-        automaticallyImplyLeading: false,
-        title: GestureDetector(
-          onTap: () {
-            Navigator.of(context).popAndPushNamed(AppRoutes.WRAPPER);
-          },
-          child: Container(
-            width: 150,
-            child: Image.network(
-              'https://download.logo.wine/logo/YouTube/YouTube-White-Full-Color-Logo.wine.png',
-              fit: BoxFit.fill,
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                showSearch(context: context, delegate: Search(searchHist));
-              },
-              icon: Icon(
-                Icons.search,
-                size: 24,
-                color: Colors.white60,
-              ))
-        ],
-      ),
+      appBar: deviceOrientation == Orientation.portrait
+          ? AppBar(
+              brightness: Brightness.dark,
+              backgroundColor: Colors.black87,
+              leadingWidth: 0,
+              titleSpacing: 0,
+              automaticallyImplyLeading: false,
+              title: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).popAndPushNamed(AppRoutes.WRAPPER);
+                },
+                child: Container(
+                  width: 150,
+                  child: Image.network(
+                    'https://download.logo.wine/logo/YouTube/YouTube-White-Full-Color-Logo.wine.png',
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      showSearch(
+                          context: context, delegate: Search(searchHist));
+                    },
+                    icon: Icon(
+                      Icons.search,
+                      size: 24,
+                      color: Colors.white60,
+                    ))
+              ],
+            )
+          : PreferredSize(child: Container(), preferredSize: Size.zero),
       body: SafeArea(
         child: FutureBuilder(
           future: Future.wait([
@@ -326,12 +341,16 @@ class _VideoPageState extends State<VideoPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Column(
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
+                  //TODO fix this mess
                   _isVideoLoading
                       ? _isVideoLoaded
-                          ? _controller.value.isInitialized
+                          ? _controller.value != null
                               ? VideoPlayerWidget(_controller)
-                              : CircularProgressIndicator()
+                              : CircularProgressIndicator(
+                                  color: Colors.red[700],
+                                )
                           : Stack(children: [
                               Container(
                                 height: 300,
@@ -356,17 +375,23 @@ class _VideoPageState extends State<VideoPage> {
                           ),
                         ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      physics: ScrollPhysics(),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildInfoBlock(snapshot.data[0]),
-                          _buildSuggestions(snapshot.data[1]),
-                        ],
-                      ),
-                    ),
+                    child: deviceOrientation == Orientation.portrait
+                        ? SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            physics: ScrollPhysics(),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                deviceOrientation == Orientation.portrait
+                                    ? _buildInfoBlock(snapshot.data[0])
+                                    : Container(),
+                                deviceOrientation == Orientation.portrait
+                                    ? _buildSuggestions(snapshot.data[1])
+                                    : Container(),
+                              ],
+                            ),
+                          )
+                        : Container(),
                   )
                 ],
               );
@@ -374,12 +399,13 @@ class _VideoPageState extends State<VideoPage> {
             // print('snapshot error : ${snapshot.error}');
             // print('Video : ${_video.author} - ${_video.title}');
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.red[700],
+              ),
             );
           },
         ),
       ),
-      // ),
       // ),
     );
   }

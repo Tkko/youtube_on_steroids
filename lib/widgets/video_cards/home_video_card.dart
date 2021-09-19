@@ -46,72 +46,74 @@ class VideoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        WatchHistory().saveHistory(video);
-        Navigator.of(context)
-            .pushNamed(AppRoutes.SINGLE_VIDEO, arguments: video.id);
-      },
-      child: Column(
-        children: <Widget>[
-          Stack(
-            children: [
-              Image.network(
-                video.thumbnails.mediumResUrl,
-                width: double.infinity,
-                fit: BoxFit.fill,
-              ),
-              Positioned(
-                bottom: 1,
-                right: 1,
-                child: Container(
-                  height: 16,
-                  color: video.isLive ? Colors.red : Colors.black87,
-                  padding: EdgeInsets.symmetric(
-                    vertical: 1,
-                    horizontal: 4,
-                  ),
-                  margin: EdgeInsets.all(5),
-                  child: FittedBox(
-                    child: Text(
-                      _durationDisplay(video.duration),
-                      // '${duration.inHours}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 26,
-                        color: Colors.white,
-                      ),
-                      softWrap: true,
-                      overflow: TextOverflow.fade,
+    return
+        //  InkWell(
+        //   onTap: () {
+        //     WatchHistory().saveHistory(video);
+        //     Navigator.of(context)
+        //         .pushNamed(AppRoutes.SINGLE_VIDEO, arguments: video.id);
+        //   },
+        // child:
+        Column(
+      children: <Widget>[
+        Stack(
+          children: [
+            Image.network(
+              video.thumbnails.mediumResUrl,
+              width: double.infinity,
+              fit: BoxFit.fill,
+            ),
+            Positioned(
+              bottom: 1,
+              right: 1,
+              child: Container(
+                height: 16,
+                color: video.isLive ? Colors.red : Colors.black87,
+                padding: EdgeInsets.symmetric(
+                  vertical: 1,
+                  horizontal: 4,
+                ),
+                margin: EdgeInsets.all(5),
+                child: FittedBox(
+                  child: Text(
+                    _durationDisplay(video.duration),
+                    // '${duration.inHours}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                      color: Colors.white,
                     ),
+                    softWrap: true,
+                    overflow: TextOverflow.fade,
                   ),
                 ),
-              ),
-            ],
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10),
-            child: ListTile(
-              title: Text(
-                '${video.title}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              leading: GestureDetector(
-                child: CircleAvatar(
-                  foregroundImage: NetworkImage(logoUrl),
-                ),
-              ),
-              subtitle: Text(
-                '${video.author} • ${NumberFormat.compact().format(video.engagement.viewCount)}  views • ${video.publishDate}',
-                style: TextStyle(color: Colors.grey[700], fontSize: 12),
               ),
             ),
-          )
-        ],
-      ),
+          ],
+        ),
+        Container(
+          margin: EdgeInsets.only(bottom: 10),
+          child: ListTile(
+            title: Text(
+              '${video.title}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            leading: GestureDetector(
+              child: CircleAvatar(
+                foregroundImage: NetworkImage(logoUrl),
+              ),
+            ),
+            subtitle: Text(
+              '${video.author} • ${NumberFormat.compact().format(video.engagement.viewCount)}  views • ${video.publishDate}',
+              style: TextStyle(color: Colors.grey[700], fontSize: 12),
+            ),
+          ),
+        )
+      ],
+      // ),
     );
   }
 }

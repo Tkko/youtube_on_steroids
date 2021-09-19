@@ -21,4 +21,9 @@ class SearchHistory {
     print('added this : $history');
     prefs.setStringList('search_history', history);
   }
+
+  static void clearSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('search_history');
+  }
 }

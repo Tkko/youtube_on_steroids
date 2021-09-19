@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_on_steroids/widgets/video_player/seekbar.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final VideoPlayerController controller;
@@ -10,7 +12,7 @@ class VideoPlayerWidget extends StatefulWidget {
 }
 
 class _VideoPlayerState extends State<VideoPlayerWidget> {
-  bool _isControlVisible = false;
+  bool _isControlVisible = true;
   // bool _isVideoLoading = false;
   @override
   void initState() {
@@ -42,15 +44,18 @@ class _VideoPlayerState extends State<VideoPlayerWidget> {
   @override
   void dispose() {
     super.dispose();
-    if (widget.controller != null) {
-      widget.controller.dispose();
-      // _isVideoLoading = false;
-      _isControlVisible = false;
-    }
+    // if (widget.controller != null) {
+    //   widget.controller.dispose();
+    //   print('DISPOSED========DISPOSED=====DISPOSED');
+    //   // _isVideoLoading = false;
+    //   _isControlVisible = false;
+    //   SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
+    final deviceOrientation = MediaQuery.of(context).orientation;
     Widget _buildPlayerButtons({Function function, IconData icon}) {
       return Container(
         // margin: EdgeInsets.fromLTRB(, 0, double.infinity, 0),
@@ -67,7 +72,10 @@ class _VideoPlayerState extends State<VideoPlayerWidget> {
     }
 
     return Stack(children: [
-      InkWell(
+      SizedBox(
+        height: deviceOrientation == Orientation.landscape
+            ? MediaQuery.of(context).size.height
+            : null,
         child: AspectRatio(
           aspectRatio: widget.controller.value.aspectRatio,
           child: VideoPlayer(widget.controller),
@@ -92,6 +100,7 @@ class _VideoPlayerState extends State<VideoPlayerWidget> {
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
                         flex: 1,
@@ -168,53 +177,28 @@ class _VideoPlayerState extends State<VideoPlayerWidget> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Expanded(
-                              flex: 2,
-                              child: Container(
-                                height: 16,
-                                margin: EdgeInsets.only(left: 6),
-                                child: FittedBox(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        '0:00 ',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        '/ 12:00',
-                                        style: TextStyle(
-                                            color: Colors.grey[400],
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: VideoProgressIndicator(
-                                    widget.controller,
-                                    allowScrubbing: true,
-                                    padding: EdgeInsets.zero,
-                                    colors: VideoProgressColors(
-                                        backgroundColor:
-                                            Color.fromRGBO(97, 97, 97, 0.6),
-                                        playedColor: Colors.red[600],
-                                        bufferedColor: Colors.white70),
-                                  )),
+                              flex: 7,
+                              child: SeekBar(widget.controller),
                             ),
                             Expanded(
                               flex: 1,
                               child: IconButton(
                                   padding: EdgeInsets.zero,
                                   splashColor: Color.fromRGBO(0, 0, 0, 0),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    if (deviceOrientation ==
+                                        Orientation.landscape) {
+                                      SystemChrome.setPreferredOrientations(
+                                          [DeviceOrientation.portraitUp]);
+                                      SystemChrome.setEnabledSystemUIOverlays(
+                                          SystemUiOverlay.values);
+                                    } else {
+                                      SystemChrome.setPreferredOrientations(
+                                          [DeviceOrientation.landscapeLeft]);
+                                      SystemChrome.setEnabledSystemUIOverlays(
+                                          []);
+                                    }
+                                  },
                                   icon: Icon(
                                     Icons.fullscreen_sharp,
                                     color: Colors.white,

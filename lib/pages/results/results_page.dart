@@ -1,6 +1,8 @@
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/app/constants.dart';
 import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
+import 'package:youtube_on_steroids/services/history/watch_history.dart';
 import 'package:youtube_on_steroids/widgets/app_bar/custom_app_bar.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/home_video_card.dart';
 
@@ -33,7 +35,10 @@ class _ResultsPageState extends State<ResultsPage> {
               builder: (context, snapshot) {
                 // Data is loading here
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.red[700],
+                  ));
                 }
                 // Data is loaded
                 final data = snapshot.data;
@@ -43,8 +48,16 @@ class _ResultsPageState extends State<ResultsPage> {
                   return ListView.builder(
                     itemCount: data.length,
                     itemBuilder: (context, index) {
-                      return VideoItem(
-                        video: data[index],
+                      return GestureDetector(
+                        onTap: () {
+                          WatchHistory().saveHistory(data[index]);
+                          Navigator.of(context).pushNamed(
+                              AppRoutes.SINGLE_VIDEO,
+                              arguments: data[index].id);
+                        },
+                        child: VideoItem(
+                          video: data[index],
+                        ),
                       );
                     },
                   );

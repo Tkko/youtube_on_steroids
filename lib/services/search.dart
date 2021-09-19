@@ -7,11 +7,12 @@ import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/home_video_card.dart';
 
 import 'history/search_history.dart';
+import 'history/watch_history.dart';
 
 class Search extends SearchDelegate<List<String>> {
   final List<String> history;
   Search(this.history);
-
+  String clickedQuery;
   @override
   String get searchFieldLabel => 'Search Here...';
 
@@ -43,14 +44,22 @@ class Search extends SearchDelegate<List<String>> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final searchKeyword = query;
-    // TODO: get this in results page;
+    String searchKeyword;
+    if (clickedQuery != null) {
+      searchKeyword = clickedQuery;
+    }
+    SearchHistory.saveSearchHistory(searchKeyword ?? query);
+    print('SK = $searchKeyword');
+    print('Q = $query');
     return FutureBuilder(
-        future: YoutubeHelper.getSearchResults(searchKeyword),
+        future: YoutubeHelper.getSearchResults(searchKeyword ?? query),
         builder: (context, snapshot) {
           // Data is loading here
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+              color: Colors.red[700],
+            ));
           }
           // Data is loaded
           final data = snapshot.data;
@@ -60,8 +69,15 @@ class Search extends SearchDelegate<List<String>> {
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
-                return VideoItem(
-                  video: data[index],
+                return GestureDetector(
+                  onTap: () {
+                    WatchHistory().saveHistory(data[index]);
+                    Navigator.of(context).pushNamed(AppRoutes.SINGLE_VIDEO,
+                        arguments: data[index].id);
+                  },
+                  child: VideoItem(
+                    video: data[index],
+                  ),
                 );
               },
             );
@@ -84,10 +100,13 @@ class Search extends SearchDelegate<List<String>> {
                         flex: 17,
                         child: GestureDetector(
                           onTap: () {
-                            SearchHistory.saveSearchHistory(history[index]);
-                            Navigator.of(context).popAndPushNamed(
-                                AppRoutes.SEARCH_RESULTS,
-                                arguments: history[index]);
+                            clickedQuery = history[index];
+
+                            // SearchHistory.saveSearchHistory(history[index]);
+                            // Navigator.of(context).popAndPushNamed(
+                            //     AppRoutes.SEARCH_RESULTS,
+                            //     arguments: history[index]);
+                            buildResults(context);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -146,10 +165,12 @@ class Search extends SearchDelegate<List<String>> {
                     flex: 17,
                     child: GestureDetector(
                       onTap: () {
-                        SearchHistory.saveSearchHistory(data[index]);
-                        Navigator.of(context).popAndPushNamed(
-                            AppRoutes.SEARCH_RESULTS,
-                            arguments: data[index]);
+                        clickedQuery = data[index];
+                        // SearchHistory.saveSearchHistory(data[index]);
+                        // Navigator.of(context).popAndPushNamed(
+                        //     AppRoutes.SEARCH_RESULTS,
+                        //     arguments: data[index]);
+                        buildResults(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(
