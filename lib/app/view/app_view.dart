@@ -2,7 +2,6 @@ import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
 import 'package:youtube_on_steroids/cubits/app_cubit.dart';
 import 'package:youtube_on_steroids/pages/error_page.dart';
-import 'package:youtube_on_steroids/pages/home/home_page.dart';
 import 'package:youtube_on_steroids/pages/splash_page.dart';
 import 'package:youtube_on_steroids/pages/wrapper/wrapper_page.dart';
 
