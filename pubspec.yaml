@@ -38,3 +38,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # images
+  assets:
+    - assets/images/user.png
+    - assets/images/userv2.jpg
+    - assets/images/logov2.png
+
+dependency_overrides:
+  freezed_annotation: 0.14.2
