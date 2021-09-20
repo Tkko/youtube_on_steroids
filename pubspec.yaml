@@ -38,7 +38,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
   # images
   assets:
     - assets/images/user.png
