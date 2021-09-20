@@ -31,6 +31,10 @@ dependencies:
   google_fonts: ^2.1.0
   flutter_screenutil: ^5.0.0+2
 
+<<<<<<< HEAD
+=======
+    
+>>>>>>> a1a614fc81e3824410d6ea12d691915324aa95c7
 
 dev_dependencies:
   flutter_test:
@@ -45,4 +49,8 @@ flutter:
     - assets/images/logov2.png
 
 dependency_overrides:
+<<<<<<< HEAD
   freezed_annotation: 0.14.2
+=======
+  freezed_annotation: 0.14.2
+>>>>>>> a1a614fc81e3824410d6ea12d691915324aa95c7

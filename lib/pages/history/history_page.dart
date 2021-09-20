@@ -24,13 +24,36 @@ class HistoryPage extends StatelessWidget {
     }
 
     return Scaffold(
-      body: Center(
-        child: ListView.builder(
-          itemCount: 2,
-          itemBuilder: (context, index) {
-            return SmallVideoCard();
-          },
-        ),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              _buildButton(
+                  text: 'CLEAR ALL WATCH HISTORY',
+                  function: () {
+                    print('clear history');
+                  }),
+              _buildButton(
+                  text: 'CLEAR ALL SEARCH HISTORY',
+                  function: () {
+                    print('clear search history');
+                  }),
+              _buildButton(
+                  text: 'MANAGE HISTORY',
+                  function: () {
+                    print('Manage History');
+                  }),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return SmallVideoCard();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
