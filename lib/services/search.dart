@@ -95,6 +95,7 @@ class Search extends SearchDelegate<List<String>> {
               child: ListView.builder(
                   itemCount: history.length,
                   itemBuilder: (context, index) {
+                    print(history);
                     return Row(children: <Widget>[
                       Expanded(
                         flex: 17,
@@ -106,7 +107,8 @@ class Search extends SearchDelegate<List<String>> {
                             // Navigator.of(context).popAndPushNamed(
                             //     AppRoutes.SEARCH_RESULTS,
                             //     arguments: history[index]);
-                            buildResults(context);
+                            query = history[index];
+                            showResults(context);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -160,6 +162,7 @@ class Search extends SearchDelegate<List<String>> {
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
+                print(data);
                 return Row(children: <Widget>[
                   Expanded(
                     flex: 17,
@@ -170,7 +173,7 @@ class Search extends SearchDelegate<List<String>> {
                         // Navigator.of(context).popAndPushNamed(
                         //     AppRoutes.SEARCH_RESULTS,
                         //     arguments: data[index]);
-                        buildResults(context);
+                        showResults(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(

@@ -11,6 +11,7 @@ import 'package:youtube_on_steroids/services/history/watch_history.dart';
 import 'package:youtube_on_steroids/services/search.dart';
 import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/home_video_card.dart';
+import 'package:youtube_on_steroids/widgets/video_player/fullscreen_video_player_widget.dart';
 import 'package:youtube_on_steroids/widgets/video_player/video_player_widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -94,66 +95,74 @@ class _VideoPageState extends State<VideoPage> {
 
   void showDescriptionModal(context) {
     showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20),
-          ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
         ),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        context: context,
-        builder: (BuildContext context) {
-          return Column(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 50,
-                    child: Divider(
-                      height: 15,
-                      thickness: 5,
-                    ),
+      ),
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 500,
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                Container(
+                  width: 50,
+                  child: Divider(
+                    height: 15,
+                    thickness: 5,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.only(left: 24),
-                          child: Text(
-                            'Description',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[700]),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 24),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.grey[600],
-                          ),
-                          iconSize: 24,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.only(left: 24),
+                        child: Text(
+                          'Description',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700]),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 24),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.grey[600],
                         ),
-                      )
-                    ],
-                  ),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: SingleChildScrollView(
+                        iconSize: 24,
+                      ),
+                    )
+                  ],
+                ),
+                Divider(
+                  thickness: 2,
+                ),
+              ]),
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: Text(_video.description),
-                    ),
-                  ),
-                ],
-              )
+                    )
+                  ],
+                ),
+              ),
             ],
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -165,6 +174,7 @@ class _VideoPageState extends State<VideoPage> {
       _isVideoLoading = false;
       // _isControlVisible = false;
       SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
   }
 
@@ -340,60 +350,52 @@ class _VideoPageState extends State<VideoPage> {
           ]),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Column(
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  //TODO fix this mess
-                  _isVideoLoading
-                      ? _isVideoLoaded
-                          ? _controller.value != null
-                              ? VideoPlayerWidget(_controller)
-                              : CircularProgressIndicator(
-                                  color: Colors.red[700],
-                                )
-                          : Stack(children: [
-                              Container(
-                                height: 300,
-                                width: double.infinity,
-                                color: Colors.black,
-                              ),
-                              Positioned.fill(
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ])
-                      : Container(
-                          height: 300,
-                          width: double.infinity,
-                          color: Colors.black,
-                          child: Text(
-                            _errorMessage ?? 'Error Loading Video',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                  Expanded(
-                    child: deviceOrientation == Orientation.portrait
-                        ? SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            physics: ScrollPhysics(),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                deviceOrientation == Orientation.portrait
-                                    ? _buildInfoBlock(snapshot.data[0])
-                                    : Container(),
-                                deviceOrientation == Orientation.portrait
-                                    ? _buildSuggestions(snapshot.data[1])
-                                    : Container(),
-                              ],
+              return Container(
+                color: deviceOrientation == Orientation.landscape
+                    ? Colors.black
+                    : Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    //TODO fix this mess
+                    _controller != null
+                        ? _controller.value != null
+                            ? deviceOrientation == Orientation.portrait
+                                ? VideoPlayerWidget(_controller)
+                                : FullscreenVideoPlayerWidget(_controller)
+                            : CircularProgressIndicator(
+                                color: Colors.red[700],
+                              )
+                        : Container(
+                            height: 300,
+                            width: double.infinity,
+                            color: Colors.black,
+                            child: Text(
+                              _errorMessage ?? 'Error Loading Video',
+                              style: TextStyle(color: Colors.white),
                             ),
-                          )
-                        : Container(),
-                  )
-                ],
+                          ),
+                    Expanded(
+                      child: deviceOrientation == Orientation.portrait
+                          ? SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              physics: ScrollPhysics(),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  deviceOrientation == Orientation.portrait
+                                      ? _buildInfoBlock(snapshot.data[0])
+                                      : Container(),
+                                  deviceOrientation == Orientation.portrait
+                                      ? _buildSuggestions(snapshot.data[1])
+                                      : Container(),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                    )
+                  ],
+                ),
               );
             }
             // print('snapshot error : ${snapshot.error}');

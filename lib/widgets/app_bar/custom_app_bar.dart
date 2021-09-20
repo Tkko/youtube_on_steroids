@@ -23,10 +23,11 @@ class CustomAppBar extends StatefulWidget {
 
 class _CustomAppBarState extends State<CustomAppBar> {
   List<String> searchHist;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
     getHistory();
+    super.didChangeDependencies();
   }
 
   void getHistory() async {
