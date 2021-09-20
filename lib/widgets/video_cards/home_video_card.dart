@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'package:youtube_on_steroids/app/constants.dart';
-import 'package:youtube_on_steroids/services/history/watch_history.dart';
 
 class VideoItem extends StatelessWidget {
   final Video video;

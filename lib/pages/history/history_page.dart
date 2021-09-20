@@ -1,10 +1,8 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/cubits/history_cubit.dart';
-import 'package:youtube_on_steroids/helpers/youtube_explode_helper.dart';
 import 'package:youtube_on_steroids/services/history/search_history.dart';
 import 'package:youtube_on_steroids/services/history/watch_history.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/history_video_card.dart';
-import 'dart:io';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage();
@@ -34,9 +32,6 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     Widget _settingsDialog(context) {
-      bool searchHistorySwitch = false;
-      bool watchHistorySwitch;
-      bool allHistorySwitch;
       return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 50,
