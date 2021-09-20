@@ -1,4 +1,5 @@
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/pages/video/video_page.dart';
 
 class BasicVideoFrame extends StatelessWidget {
   @override
@@ -7,6 +8,7 @@ class BasicVideoFrame extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () async{
+            Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPage()));
 
           },
           child: Container(
