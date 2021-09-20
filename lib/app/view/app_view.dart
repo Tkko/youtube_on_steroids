@@ -3,6 +3,7 @@ import 'package:youtube_on_steroids/app/constants.dart';
 import 'package:youtube_on_steroids/cubits/app_cubit.dart';
 import 'package:youtube_on_steroids/pages/error_page.dart';
 import 'package:youtube_on_steroids/pages/splash_page.dart';
+import 'package:youtube_on_steroids/pages/video/video_page.dart';
 import 'package:youtube_on_steroids/pages/wrapper/wrapper_page.dart';
 
 class AppView extends StatefulWidget {
@@ -16,6 +17,7 @@ class _AppViewState extends State<AppView> {
     AppRoutes.SPLASH: (_) => SplashPage(),
     AppRoutes.ERROR: (_) => ErrorPage(),
     AppRoutes.WRAPPER: (_) => WrapperPage(),
+    AppRoutes.VIDEO: (_) => VideoPage(),
   };
 
   final appNavigatorKey = GlobalKey<NavigatorState>();

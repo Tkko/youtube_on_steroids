@@ -8,18 +8,22 @@ class BasicVideoCard extends StatelessWidget {
       height: 303.h,
       child: Column(
         children: [
-          Container( // video frame
+          Container(
+            // video frame
             height: 211.h,
             child: BasicVideoFrame(),
           ),
-          Container( // video description
+          Container(
+            // video description
             width: double.infinity,
             constraints: BoxConstraints(
               maxHeight: 92.h,
             ),
             child: ListTile(
               leading: InkWell(
-                onTap: () { print('clicked');},
+                onTap: () {
+                  print('clicked');
+                },
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: 50,
@@ -35,13 +39,16 @@ class BasicVideoCard extends StatelessWidget {
               ),
               title: RichText(
                 text: TextSpan(
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
                   text: 'Here is title',
                 ),
               ),
               subtitle: Text('Author name' + " · " + '200K'),
               trailing: Transform.translate(
-                offset: Offset(0,-10),
+                offset: Offset(0, -10),
                 child: IconButton(
                   color: Colors.black,
                   icon: const Icon(Icons.more_vert),
