@@ -24,11 +24,17 @@ class _WrapperPageState extends State<WrapperPage> {
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              CustomAppBar(
-                hasFilters: true,
-                isFloating: true,
-                isPinned: false,
-              )
+              _selectedIndex == 0
+                  ? CustomAppBar(
+                      hasFilters: true,
+                      isFloating: true,
+                      isPinned: false,
+                    )
+                  : CustomAppBar(
+                      hasFilters: false,
+                      isFloating: true,
+                      isPinned: false,
+                    )
             ];
           },
           body: [
