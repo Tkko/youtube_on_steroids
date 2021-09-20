@@ -47,7 +47,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
         child: Container(
           width: 100,
           child: Image.asset(
-            'assets/images/logo.png',
+            'assets/images/logov2.png',
             fit: BoxFit.fill,
           ),
         ),
