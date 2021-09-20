@@ -31,6 +31,10 @@ dependencies:
   google_fonts: ^2.1.0
   flutter_screenutil: ^5.0.0+2
 
+    
+dependency_overrides: 
+  freezed_annotation: 0.14.2
+
 
 dev_dependencies:
   flutter_test:
@@ -38,3 +42,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/logo.png
+    - assets/images/user.png
