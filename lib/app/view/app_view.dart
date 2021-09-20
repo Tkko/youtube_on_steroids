@@ -48,6 +48,7 @@ class _AppViewState extends State<AppView> {
         child: BlocBuilder<AppCubit, AppState>(
           builder: (context, state) {
             return MaterialApp(
+              debugShowCheckedModeBanner: false,
               title: 'SideSwap',
               navigatorKey: appNavigatorKey,
               theme: appThemes.theme,
