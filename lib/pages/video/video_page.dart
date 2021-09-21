@@ -213,7 +213,7 @@ class _VideoPageState extends State<VideoPage> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             // Video Widget goes instead of this container.
-            ConcreteVideoPage(),
+            ConcreteVideoFrame(),
 
             //error screen if vide doesn't load
 
