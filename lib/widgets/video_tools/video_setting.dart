@@ -1,7 +1,6 @@
 import 'package:youtube_on_steroids/app/app.dart';
 
 class VideoSetting extends StatefulWidget {
-
   @override
   _VideoSettingState createState() => _VideoSettingState();
 }
@@ -26,7 +25,11 @@ class _VideoSettingState extends State<VideoSetting> {
           ),
         ),
         SizedBox(width: 10),
-        Icon(Icons.settings, size: 32.0),
+        Icon(
+          Icons.settings,
+          size: 32.0,
+          color: Colors.white,
+        ),
         SizedBox(width: 15),
       ],
     );

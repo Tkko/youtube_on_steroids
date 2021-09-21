@@ -1,80 +1,81 @@
-import 'package:video_player/video_player.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/pages/video/video_fullscreen_page.dart';
+
+import 'package:video_player/video_player.dart';
 import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_tools/video_play_pause.dart';
 import 'package:youtube_on_steroids/widgets/video_tools/video_setting.dart';
 
-class ConcreteVideoFrame extends StatefulWidget {
+class VideoFullscreenPage extends StatefulWidget {
+  // const VideoFullscreenPage({Key key}) : super(key: key);
+  final VideoPlayerController videoController;
+  const VideoFullscreenPage(this.videoController);
+
   @override
-  _ConcreteVideoFrameState createState() => _ConcreteVideoFrameState();
+  _VideoFullscreenPageState createState() => _VideoFullscreenPageState();
 }
 
-class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
-  VideoPlayerController _videoController;
-  bool darkFrame = false;
-
+class _VideoFullscreenPageState extends State<VideoFullscreenPage> {
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-
-    _videoController = VideoPlayerController.network(
-        'https://cdn.videvo.net/videvo_files/video/free/2013-09/large_watermarked/AbstractRotatingCubesVidevo_preview.mp4')
-      ..initialize().then((_) {
-        setState(() {});
-        _videoController.play();
-      });
+    //Turn screen to landscape
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    //Enter Fullscreen (remove phone navigation, status bar)
+    SystemChrome.setEnabledSystemUIOverlays([]);
   }
 
   @override
   void dispose() {
+    // TODO: implement dispose
     super.dispose();
-    if (_videoController != null) {
-      _videoController.dispose();
-    }
+    //return to default orientation and system ui overlay
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
   playVideo(bool run) {
     setState(() {
-      run ? _videoController.play() : _videoController.pause();
+      run ? widget.videoController.play() : widget.videoController.pause();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
+    bool darkFrame = true;
 
-    return
-        //  Container(
-        //   // height: 200.h,
-        //   width: double.infinity,
-        //   color: Colors.black,
-        //   child:
-        _videoController != null
+    return Scaffold(
+      body: Container(
+        color: Colors.black,
+        child: widget.videoController != null
             ? GestureDetector(
-                onTap: () => setState(() {
-                  darkFrame = !darkFrame;
-                }),
+                onTap: () {
+                  print('tap');
+                  setState(() {
+                    darkFrame = !darkFrame;
+                  });
+                },
                 child: Stack(
                   children: [
                     Container(
                       width: double.infinity,
-                      child: _videoController.value.isInitialized
+                      child: widget.videoController.value.isInitialized
                           ? AspectRatio(
-                              aspectRatio: _videoController.value.aspectRatio,
-                              child: VideoPlayer(_videoController))
+                              aspectRatio:
+                                  widget.videoController.value.aspectRatio,
+                              child: VideoPlayer(widget.videoController))
                           : Text('Video loading...'),
                     ),
                     darkFrame
                         ? Container(
-                            height: 200.h,
-                            // padding: EdgeInsets.symmetric(vertical: ),
-                            width: double.infinity,
-                            // height: 200.h,
                             color: Colors.black.withOpacity(0.3),
+                            padding: EdgeInsets.symmetric(vertical: 8),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
                               children: [
                                 Container(
                                   width: deviceWidth,
@@ -83,7 +84,7 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                 Container(
                                   width: deviceWidth,
                                   child: VideoPlayPause(playVideo,
-                                      _videoController.value.isPlaying),
+                                      widget.videoController.value.isPlaying),
                                 ),
                                 Container(
                                   width: deviceWidth,
@@ -118,7 +119,7 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                               value: 2.00,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  _videoController.seekTo(
+                                                  widget.videoController.seekTo(
                                                       Duration(
                                                           seconds: (value * 60)
                                                               .toInt()));
@@ -139,14 +140,15 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                               ),
                                             ),
                                             onTap: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return VideoFullscreenPage(
-                                                    _videoController);
-                                              })).then((val) {
-                                                setState(() {});
-                                              });
+                                              //reset to defaults then pop
+                                              SystemChrome
+                                                  .setPreferredOrientations([
+                                                DeviceOrientation.portraitUp
+                                              ]);
+                                              SystemChrome
+                                                  .setEnabledSystemUIOverlays(
+                                                      SystemUiOverlay.values);
+                                              Navigator.of(context).pop();
                                             },
                                           ),
                                         ),
@@ -163,7 +165,8 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
               )
             : Center(
                 child: CircularProgressIndicator(color: Colors.white),
-                // ),
-              );
+              ),
+      ),
+    );
   }
 }

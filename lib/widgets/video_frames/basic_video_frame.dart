@@ -1,5 +1,6 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/utils/helper.dart';
 
 class BasicVideoFrame extends StatelessWidget {
   @override
@@ -29,7 +30,7 @@ class BasicVideoFrame extends StatelessWidget {
             ),
             margin: const EdgeInsets.only(right: 15.0, bottom: 10.0),
             padding: const EdgeInsets.all(2),
-            child: Text('10:20',
+            child: Text('${Helper.durationDisplay(Duration(hours: 5))}',
                 style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold)),
           ),
