@@ -2,7 +2,6 @@ import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/widgets/video_frames/basic_video_frame.dart';
 
 class SmallVideoCard extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,28 +20,31 @@ class SmallVideoCard extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     height: 120.h,
-                    child: BasicVideoFrame(),
+                    // child: BasicVideoFrame(),
                   ),
                 ),
-              ) ,
+              ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.55,
                 height: 140.h,
                 child: ListTile(
                   title: RichText(
                     text: TextSpan(
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14),
                       text: 'Here is title',
                     ),
                   ),
                   subtitle: RichText(
                     text: TextSpan(
-                      style: TextStyle(color: Colors.grey[600],  fontSize: 13),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
                       text: 'Author\n300K watching',
                     ),
                   ),
                   trailing: InkWell(
-                    onTap: (){
+                    onTap: () {
                       print('action!');
                     },
                     child: Icon(Icons.more_vert),

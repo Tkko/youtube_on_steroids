@@ -13,9 +13,7 @@ class YoutubeDataHandler implements IYoutube {
   final List<String> playlistString = [];
   final String url;
 
-  YoutubeDataHandler({
-    @required this.url
-  });
+  YoutubeDataHandler({@required this.url});
 
   Future handler() async {
     final playlist = await ytFacade.fetchPlayList(url, 15, 0);
@@ -41,35 +39,35 @@ class YoutubeDataHandler implements IYoutube {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: handler(),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(
-            child: Text('Loading...'),
-          );
-        }else {
-          if(snapshot.hasError) {
+        future: handler(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: Text('Error: ${snapshot.error}'),
+              child: Text('Loading...'),
             );
-          }else{
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                return BasicVideoCard(ytModel: snapshot.data[index],);
-              },
-            );
+          } else {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else {
+              return ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return BasicVideoCard(
+                    ytModel: snapshot.data[index],
+                  );
+                },
+              );
+            }
           }
-        }
-      }
-    );
+        });
   }
 
   /// Here is logic of save on disk
-  void createCache(String url) async{
+  void createCache(String url) async {
     await SharedPreferenceFacade.setStringList(url, playlistString);
   }
-
 }

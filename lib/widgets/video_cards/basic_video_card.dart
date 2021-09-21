@@ -1,12 +1,13 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
+import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_frames/basic_video_frame.dart';
 
 class BasicVideoCard extends StatelessWidget {
   final YoutubePlaylist ytModel;
 
   BasicVideoCard({
-  @required this.ytModel,
+    @required this.ytModel,
   });
 
   @override
@@ -18,7 +19,7 @@ class BasicVideoCard extends StatelessWidget {
           Container(
             // video frame
             height: 211.h,
-            child: BasicVideoFrame(),
+            child: BasicVideoFrame(ytModel),
           ),
           Container(
             // video description
@@ -53,7 +54,9 @@ class BasicVideoCard extends StatelessWidget {
                   text: ytModel.title,
                 ),
               ),
-              subtitle: Text('${ytModel.author}' + " · " + ytModel.view),
+              subtitle: Text('${ytModel.author}' +
+                  " · " +
+                  Helper.compactNumber(int.parse(ytModel.view))),
               trailing: Transform.translate(
                 offset: Offset(0, -10),
                 child: IconButton(
