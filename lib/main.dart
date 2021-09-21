@@ -4,6 +4,7 @@ import 'package:youtube_on_steroids/app/core/api_client/api_client.dart';
 import 'package:youtube_on_steroids/app/view/app_helper_widgets.dart';
 import 'package:youtube_on_steroids/app/view/app_view.dart';
 import 'package:youtube_on_steroids/cubits/app_cubit.dart';
+import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
 
 void main() async {
   Future<bool> registerLocalSingletons() async {
@@ -23,6 +24,9 @@ void main() async {
   }
 
   await init();
+  await SharedPreferenceFacade.init();
+  await SharedPreferenceFacade.clear();
+
   runApp(MyApp());
 }
 
