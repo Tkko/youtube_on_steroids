@@ -1,9 +1,9 @@
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/widgets/video_cards/basic_video_card.dart';
+import 'package:youtube_on_steroids/services/youtube/youtube_data_handler_proxy.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage();
-
+  final String url = 'PLvDdvz8B_JZuUwkzjevxMS4L0kBsv0DuN';
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,12 +11,7 @@ class HomePage extends StatelessWidget {
         children: [
           Expanded(
             flex: 10,
-            child: ListView.builder(
-              itemCount: 3,
-              itemBuilder:(context, index) {
-                return BasicVideoCard();
-              },
-            ),
+            child: YoutubeDataHandlerProxy(url: url).build(context),
           ),
         ],
       ),

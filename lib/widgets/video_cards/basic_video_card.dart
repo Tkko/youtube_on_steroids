@@ -1,7 +1,14 @@
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/widgets/video_frames/basic_video_frame.dart';
 
 class BasicVideoCard extends StatelessWidget {
+  final YoutubePlaylist ytModel;
+
+  BasicVideoCard({
+  @required this.ytModel,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,10 +50,10 @@ class BasicVideoCard extends StatelessWidget {
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 14),
-                  text: 'Here is title',
+                  text: ytModel.title,
                 ),
               ),
-              subtitle: Text('Author name' + " · " + '200K'),
+              subtitle: Text('${ytModel.author}' + " · " + ytModel.view),
               trailing: Transform.translate(
                 offset: Offset(0, -10),
                 child: IconButton(
