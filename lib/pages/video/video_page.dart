@@ -5,6 +5,7 @@ import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
 import 'package:youtube_on_steroids/widgets/app_bars/custom_video_page_app_bar.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/basic_video_card.dart';
+import 'package:youtube_on_steroids/widgets/video_frames/concrete_video_frame.dart';
 
 class VideoPage extends StatefulWidget {
   const VideoPage();
@@ -212,17 +213,21 @@ class _VideoPageState extends State<VideoPage> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             // Video Widget goes instead of this container.
-            Container(
-              height: 230.h,
-              width: double.infinity,
-              color: Colors.black,
-              child: Center(
-                child: Text(
-                  'No Video Was Loaded',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
+            ConcreteVideoPage(),
+
+            //error screen if vide doesn't load
+
+            // Container(
+            //   height: 230.h,
+            //   width: double.infinity,
+            //   color: Colors.black,
+            //   child: Center(
+            //     child: Text(
+            //       'No Video Was Loaded',
+            //       style: TextStyle(color: Colors.white),
+            //     ),
+            //   ),
+            // ),
             Expanded(
                 child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
