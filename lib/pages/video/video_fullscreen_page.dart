@@ -96,8 +96,7 @@ class _VideoFullscreenPageState extends State<VideoFullscreenPage> {
                                         Text('0:00 /',
                                             style:
                                                 TextStyle(color: Colors.white)),
-                                        Text(
-                                            '${Helper.durationDisplay(Duration(hours: 5))}',
+                                        Text('hi',
                                             style: TextStyle(
                                                 color: Colors.grey[200])),
                                         SliderTheme(

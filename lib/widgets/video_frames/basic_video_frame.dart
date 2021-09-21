@@ -33,7 +33,7 @@ class BasicVideoFrame extends StatelessWidget {
             ),
             margin: const EdgeInsets.only(right: 15.0, bottom: 10.0),
             padding: const EdgeInsets.all(2),
-            child: Text('${Helper.durationDisplay(Duration(days: 1))}',
+            child: Text('${Helper.durationDisplay(ytModel.duration)}',
                 style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold)),
           ),
