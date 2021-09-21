@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/utils/search.dart';
 
 class CustomVideoPageAppBar extends StatelessWidget with PreferredSizeWidget {
   const CustomVideoPageAppBar({Key key}) : super(key: key);
@@ -27,16 +28,19 @@ class CustomVideoPageAppBar extends StatelessWidget with PreferredSizeWidget {
       actions: [
         IconButton(
             onPressed: () {
-              print('show Search');
+              showSearch(context: context, delegate: Search());
             },
             icon: Icon(
               Icons.search,
               size: 24,
               color: Colors.white60,
             )),
-        CircleAvatar(
-          maxRadius: 15,
-          backgroundImage: AssetImage('assets/images/user.png'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircleAvatar(
+            maxRadius: 15,
+            backgroundImage: AssetImage('assets/images/user.png'),
+          ),
         )
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/utils/search.dart';
 import 'package:youtube_on_steroids/widgets/app_bars/custom_app_bar_filters.dart';
 
 class CustomAppBar extends StatefulWidget {
@@ -26,7 +27,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       actions: [
         IconButton(
           onPressed: () {
-            print('showSearch()');
+            showSearch(context: context, delegate: Search());
           },
           icon: Icon(
             Icons.search,
@@ -34,9 +35,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
             color: Colors.black38,
           ),
         ),
-        CircleAvatar(
-          maxRadius: 15,
-          backgroundImage: AssetImage('assets/images/user.png'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircleAvatar(
+            maxRadius: 15,
+            backgroundImage: AssetImage('assets/images/user.png'),
+          ),
         )
       ],
       automaticallyImplyLeading: false,
