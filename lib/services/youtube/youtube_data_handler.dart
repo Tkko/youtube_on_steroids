@@ -26,6 +26,7 @@ class YoutubeDataHandler implements IYoutube {
         coverImage: e.thumbnails.highResUrl,
         view: '2100',
         isLive: e.isLive,
+        duration: e.duration.toString(),
       );
       playlistModel.add(current);
       playlistString.add(jsonEncode(current.toJson()));
