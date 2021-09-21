@@ -7,10 +7,11 @@ import 'package:youtube_on_steroids/services/youtube/iyoutube.dart';
 import 'package:youtube_on_steroids/services/youtube/youtube_data_handler.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/basic_video_card.dart';
 
+//TODO::
 class YoutubeDataHandlerProxy implements IYoutube {
   IYoutube dataHandler;
   String url;
-  
+
   YoutubeDataHandlerProxy({
     @required this.url,
   }) {
@@ -19,9 +20,9 @@ class YoutubeDataHandlerProxy implements IYoutube {
 
   @override
   Widget build(BuildContext context) {
-    if(SharedPreferenceFacade.getStringList(url) == null){
+    if (SharedPreferenceFacade.getStringList(url) == null) {
       return this.dataHandler.build(context);
-    }else{
+    } else {
       List<String> jsonPlaylist = SharedPreferenceFacade.getStringList(url);
       return ListView.builder(
         scrollDirection: Axis.vertical,

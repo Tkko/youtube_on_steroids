@@ -144,12 +144,9 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                         ),
                                         Expanded(
                                           child: InkWell(
-                                            child: Hero(
-                                              tag: 'HeroFullscreen',
-                                              child: Icon(
-                                                Icons.fullscreen,
-                                                color: Colors.white,
-                                              ),
+                                            child: Icon(
+                                              Icons.fullscreen,
+                                              color: Colors.white,
                                             ),
                                             onTap: () {
                                               Navigator.of(context).push(
@@ -174,15 +171,15 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                   ],
                 ),
               )
-            : Center(
-                child: Container(
-                    height: 200.h,
-                    width: double.infinity,
-                    color: Colors.black,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                    )),
-                // ),
+            : Container(
+                height: 200.h,
+                width: double.infinity,
+                color: Colors.black,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
               );
   }
 }

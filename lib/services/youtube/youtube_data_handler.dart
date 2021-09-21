@@ -5,6 +5,7 @@ import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
 import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/services/youtube/iyoutube.dart';
+import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/basic_video_card.dart';
 
 class YoutubeDataHandler implements IYoutube {
@@ -26,7 +27,7 @@ class YoutubeDataHandler implements IYoutube {
         coverImage: e.thumbnails.highResUrl,
         view: '2100',
         isLive: e.isLive,
-        duration: e.duration.toString(),
+        duration: Helper.durationDisplay(e.duration),
       );
       playlistModel.add(current);
       playlistString.add(jsonEncode(current.toJson()));

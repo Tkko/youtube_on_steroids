@@ -46,6 +46,9 @@ class BasicVideoCard extends StatelessWidget {
                 ),
               ),
               title: RichText(
+                maxLines: 3,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
                 text: TextSpan(
                   style: TextStyle(
                       color: Colors.black,
@@ -54,11 +57,16 @@ class BasicVideoCard extends StatelessWidget {
                   text: ytModel.title,
                 ),
               ),
-              subtitle: Text('${ytModel.author}' +
-                  " · " +
-                  Helper.compactNumber(int.parse(ytModel.view))),
+              subtitle: Text(
+                '${ytModel.author}' +
+                    " • " +
+                    Helper.compactNumber(int.parse(ytModel.view)),
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
               trailing: Transform.translate(
-                offset: Offset(0, -10),
+                offset: Offset(15, -10),
                 child: IconButton(
                   color: Colors.black,
                   icon: const Icon(Icons.more_vert),

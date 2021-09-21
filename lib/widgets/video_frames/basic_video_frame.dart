@@ -1,17 +1,18 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
+import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/basic_video_card.dart';
 
 class BasicVideoFrame extends StatelessWidget {
-  final ytModel;
+  final YoutubePlaylist ytModel;
   const BasicVideoFrame(this.ytModel);
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () async {
+          onTap: () {
             Navigator.of(context)
                 .pushNamed(AppRoutes.VIDEO, arguments: ytModel);
           },
@@ -33,7 +34,7 @@ class BasicVideoFrame extends StatelessWidget {
             ),
             margin: const EdgeInsets.only(right: 15.0, bottom: 10.0),
             padding: const EdgeInsets.all(2),
-            child: Text('${Helper.durationDisplay(ytModel.duration)}',
+            child: Text(ytModel.duration,
                 style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold)),
           ),

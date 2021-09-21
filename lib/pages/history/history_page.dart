@@ -1,8 +1,26 @@
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/cubits/history_cubit.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/small_video_card.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends StatefulWidget {
   const HistoryPage();
+
+  @override
+  _HistoryPageState createState() => _HistoryPageState();
+}
+
+class _HistoryPageState extends State<HistoryPage> {
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    getHistory(context);
+  }
+
+  void getHistory(BuildContext context) {
+    final cubit = BlocProvider.of<HistoryCubit>(context);
+    cubit.getHistory('watch_history');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +63,38 @@ class HistoryPage extends StatelessWidget {
                   }),
             ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 2,
-              itemBuilder: (context, index) {
-                return SmallVideoCard();
-              },
-            ),
-          ),
+          BlocConsumer<HistoryCubit, HistoryState>(listener: (context, state) {
+            if (state is HistoryError) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.message)));
+            }
+          }, builder: (context, state) {
+            if (state is HistoryInitial) {
+              return Text('init');
+            } else if (state is HistoryLoading) {
+              return Center(
+                  child: CircularProgressIndicator(
+                color: Colors.red[700],
+              ));
+            } else if (state is HistoryLoaded) {
+              print(state.videos);
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: 2,
+                  itemBuilder: (context, index) {
+                    return SmallVideoCard();
+                  },
+                ),
+              );
+            } else if (state is HistoryConverted) {
+              return Center(
+                child: Text(state.videos.first),
+              );
+            } else
+              return Center(
+                child: Text(state.toString()),
+              );
+          })
         ],
       ),
     );
