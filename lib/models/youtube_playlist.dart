@@ -6,6 +6,7 @@ class YoutubePlaylist {
   final String author;
   final String coverImage;
   final String view;
+  final String duration;
   final bool isLive;
 
   YoutubePlaylist({
@@ -15,6 +16,7 @@ class YoutubePlaylist {
     @required this.coverImage,
     @required this.view,
     @required this.isLive,
+    @required this.duration,
   });
 
   Map<String, dynamic> toJson() {
@@ -25,6 +27,7 @@ class YoutubePlaylist {
       "coverImage": this.coverImage,
       "view": this.view,
       "isLive": this.isLive,
+      "duration": this.duration,
     };
   }
 
@@ -36,6 +39,7 @@ class YoutubePlaylist {
       coverImage: json["coverImage"],
       view: json["view"],
       isLive: json["isLive"] == 'true',
+      duration: json['duration']
     );
   }
 

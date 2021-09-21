@@ -28,6 +28,7 @@ class YoutubeDataHandler implements IYoutube {
         coverImage: e.thumbnails.highResUrl,
         view: '2100',
         isLive: e.isLive,
+        duration: e.duration.toString(),
       );
       playlistModel.add(current);
       playlistString.add(jsonEncode(current.toJson()));
@@ -71,5 +72,4 @@ class YoutubeDataHandler implements IYoutube {
   void createCache(String url) async{
     await SharedPreferenceFacade.setStringList(url, playlistString);
   }
-
 }
