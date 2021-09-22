@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -26,5 +28,9 @@ class Helper {
       return 'A long time ago';
     }
     return timeago.format(date);
+  }
+
+  static String generateRandomNum(int min, int max){
+    return compactNumber(min + Random().nextInt(max-min));
   }
 }

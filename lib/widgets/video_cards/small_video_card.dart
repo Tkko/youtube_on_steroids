@@ -1,11 +1,14 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
-import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_frames/basic_video_frame.dart';
 
 class SmallVideoCard extends StatelessWidget {
   final YoutubePlaylist ytModel;
-  const SmallVideoCard(this.ytModel);
+
+  const SmallVideoCard({
+    @required this.ytModel
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,7 +48,7 @@ class SmallVideoCard extends StatelessWidget {
                     text: TextSpan(
                       style: TextStyle(color: Colors.grey[600], fontSize: 13),
                       text:
-                          '${ytModel.author}\n${Helper.compactNumber(int.parse(ytModel.view))} watching',
+                          '${ytModel.author}\n${ytModel.view} watching',
                     ),
                   ),
                   trailing: InkWell(

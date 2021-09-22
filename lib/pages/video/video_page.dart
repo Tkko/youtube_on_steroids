@@ -1,6 +1,5 @@
 import 'package:flutter/rendering.dart';
 import 'package:youtube_on_steroids/app/app.dart';
-import 'package:youtube_on_steroids/app/constants.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/app_bars/custom_video_page_app_bar.dart';
@@ -109,7 +108,7 @@ class _VideoPageState extends State<VideoPage> {
     }
 
     //builds 3 blocks, video info block, button block, channel block;
-    //can be seperated;
+    //can be separated;
     Widget _buildInfoBlock() {
       return Column(
         children: <Widget>[
@@ -120,7 +119,7 @@ class _VideoPageState extends State<VideoPage> {
               style: TextStyle(fontSize: 18),
             ),
             subtitle: Text(
-              '${Helper.compactNumber(int.parse(ytModel.view))}  views • ${Helper.convertToTimeAgo(DateTime.now())}',
+              ytModel.view + '  views • ${Helper.convertToTimeAgo(DateTime.now())}',
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
             trailing: IconButton(

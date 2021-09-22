@@ -20,6 +20,7 @@ dependencies:
   bloc: ^7.1.0
   flutter_bloc: ^7.2.0
   rxdart: ^0.27.1
+  intl: ^0.17.0
 
   #
   shared_preferences: ^2.0.7

@@ -1,6 +1,5 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
-import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_frames/basic_video_frame.dart';
 
 class BasicVideoCard extends StatelessWidget {
@@ -61,9 +60,7 @@ class BasicVideoCard extends StatelessWidget {
                 ),
               ),
               subtitle: Text(
-                '${ytModel.author}' +
-                    " • " +
-                    Helper.compactNumber(int.parse(ytModel.view)),
+                '${ytModel.author}' + " • " + ytModel.view,
                 style: TextStyle(
                   fontSize: 12,
                 ),

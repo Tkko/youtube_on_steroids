@@ -1,21 +1,27 @@
+import 'dart:convert';
+
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/app/constants.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
-import 'package:youtube_on_steroids/utils/helper.dart';
-import 'package:youtube_on_steroids/widgets/video_cards/basic_video_card.dart';
+import 'package:youtube_on_steroids/services/cache/cache_service.dart';
+import 'package:youtube_on_steroids/services/cache/video_view_cache.dart';
 
 class BasicVideoFrame extends StatelessWidget {
   final YoutubePlaylist ytModel;
-  const BasicVideoFrame(this.ytModel);
+  final CacheService cache = VideoViewCache();
+
+  BasicVideoFrame(this.ytModel);
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () {
+          onTap: () async{
             Navigator.of(context)
                 .pushNamed(AppRoutes.VIDEO, arguments: ytModel);
-          },
+            cache.create(jsonEncode(ytModel.toJson()));
+
+            },
           child: Container(
             width: double.infinity,
             child: Image.network(ytModel.coverImage,
