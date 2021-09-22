@@ -1,5 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/app_bars/custom_video_page_app_bar.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/basic_video_card.dart';
 import 'package:youtube_on_steroids/widgets/video_frames/concrete_video_frame.dart';
@@ -116,7 +117,7 @@ class _VideoPageState extends State<VideoPage> {
               style: TextStyle(fontSize: 18),
             ),
             subtitle: Text(
-              '250k  views • Long Time Ago',
+              '${Helper.compactNumber(561132)}  views • ${Helper.convertToTimeAgo(DateTime.now())}',
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
             trailing: IconButton(
