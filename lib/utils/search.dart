@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/utils/helper.dart';
-import 'package:youtube_on_steroids/widgets/video_cards/small_video_card.dart';
 
 class Search extends SearchDelegate<List<String>> {
   Search();
@@ -71,9 +70,9 @@ class Search extends SearchDelegate<List<String>> {
             return Text('No data');
           } else {
             return ListView.builder(
-              itemCount: data.length,
+              itemCount: 0,
               itemBuilder: (context, index) {
-                return SmallVideoCard(data[index]);
+                // return SmallVideoCard(data[index]);
               },
             );
           }

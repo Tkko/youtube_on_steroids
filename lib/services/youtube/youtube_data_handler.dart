@@ -14,7 +14,9 @@ class YoutubeDataHandler implements IYoutube {
   final List<String> playlistString = [];
   final String url;
 
-  YoutubeDataHandler({@required this.url});
+  YoutubeDataHandler({
+    @required this.url
+  });
 
   Future handler() async {
     final playlist = await ytFacade.fetchPlayList(url, 15, 0);
@@ -25,7 +27,7 @@ class YoutubeDataHandler implements IYoutube {
         title: e.title,
         author: e.author,
         coverImage: e.thumbnails.highResUrl,
-        view: '2100',
+        view: Helper.generateRandomNum(21000, 2400000).toString(),
         isLive: e.isLive,
         duration: Helper.durationDisplay(e.duration),
       );

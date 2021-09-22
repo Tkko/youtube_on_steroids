@@ -1,5 +1,4 @@
 import 'package:video_player/video_player.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';

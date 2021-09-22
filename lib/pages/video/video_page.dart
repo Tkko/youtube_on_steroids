@@ -119,7 +119,7 @@ class _VideoPageState extends State<VideoPage> {
               style: TextStyle(fontSize: 18),
             ),
             subtitle: Text(
-              '${Helper.compactNumber(int.parse(ytModel.view))}  views • ${Helper.convertToTimeAgo(DateTime.now())}',
+              ytModel.view + '  views • ${Helper.convertToTimeAgo(DateTime.now())}',
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
             trailing: IconButton(

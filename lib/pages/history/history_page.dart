@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/cubits/history_cubit.dart';
 import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
+import 'package:youtube_on_steroids/models/youtube_playlist.dart';
+import 'package:youtube_on_steroids/services/cache/cache_service.dart';
+import 'package:youtube_on_steroids/services/cache/video_view_cache.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/small_video_card.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -11,6 +16,8 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  final CacheService cache = new VideoViewCache();
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -23,8 +30,11 @@ class _HistoryPageState extends State<HistoryPage> {
     cubit.getHistory('watch_history');
   }
 
+
   @override
   Widget build(BuildContext context) {
+    List<String> cacheAsJson = cache.show();
+
     Widget _buildButton({String text, Function function}) {
       return Expanded(
         child: Container(
@@ -81,11 +91,9 @@ class _HistoryPageState extends State<HistoryPage> {
               print(state.videos);
               return Expanded(
                 child: ListView.builder(
-                  itemCount: 2,
+                  itemCount: cacheAsJson.length,
                   itemBuilder: (context, index) {
-                    // return SmallVideoCard();
-                    //TEMPORARY UNTILL HISTORY IS LOADED
-                    return Container();
+                    return SmallVideoCard(ytModel: YoutubePlaylist.fromJson(jsonDecode(cacheAsJson[index])));
                   },
                 ),
               );
