@@ -1,11 +1,16 @@
 import 'package:video_player/video_player.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
+import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/pages/video/video_fullscreen_page.dart';
 import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_tools/video_play_pause.dart';
 import 'package:youtube_on_steroids/widgets/video_tools/video_setting.dart';
 
 class ConcreteVideoFrame extends StatefulWidget {
+  final YoutubePlaylist ytModel;
+  const ConcreteVideoFrame(this.ytModel);
   @override
   _ConcreteVideoFrameState createState() => _ConcreteVideoFrameState();
 }
@@ -17,9 +22,12 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
   @override
   void initState() {
     super.initState();
+    getStreamUrl(widget.ytModel.videoId);
+  }
 
-    _videoController = VideoPlayerController.network(
-        'https://cdn.videvo.net/videvo_files/video/free/2013-09/large_watermarked/AbstractRotatingCubesVidevo_preview.mp4')
+  void getStreamUrl(String id) async {
+    String videoUrl = await YoutubeExplodeFacade().fetchStreamUrl(id);
+    _videoController = VideoPlayerController.network(videoUrl)
       ..initialize().then((_) {
         setState(() {});
         _videoController.play();
@@ -67,10 +75,10 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                     ),
                     darkFrame
                         ? Container(
-                            height: 200.h,
-                            // padding: EdgeInsets.symmetric(vertical: ),
+                            height: (_videoController.value.size.height /
+                                    _videoController.value.size.width) *
+                                deviceWidth,
                             width: double.infinity,
-                            // height: 200.h,
                             color: Colors.black.withOpacity(0.3),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,11 +100,12 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                     child: Row(
                                       children: [
                                         SizedBox(width: deviceWidth * 0.03),
-                                        Text('0:00 /',
+                                        Text(
+                                            '${Helper.durationDisplay(_videoController.value.position)} /',
                                             style:
                                                 TextStyle(color: Colors.white)),
                                         Text(
-                                            '${Helper.durationDisplay(Duration(hours: 5))}',
+                                            '${Helper.durationDisplay(_videoController.value.duration)}',
                                             style: TextStyle(
                                                 color: Colors.grey[200])),
                                         SliderTheme(
@@ -115,28 +124,29 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                           child: Container(
                                             width: deviceWidth * 0.66,
                                             child: Slider(
-                                              value: 2.00,
+                                              value: _videoController
+                                                  .value.position.inSeconds
+                                                  .toDouble(),
                                               onChanged: (value) {
                                                 setState(() {
                                                   _videoController.seekTo(
                                                       Duration(
-                                                          seconds: (value * 60)
-                                                              .toInt()));
+                                                          seconds:
+                                                              value.toInt()));
                                                 });
                                               },
                                               min: 0.0,
-                                              max: 12.10,
+                                              max: _videoController
+                                                  .value.duration.inSeconds
+                                                  .toDouble(),
                                             ),
                                           ),
                                         ),
                                         Expanded(
                                           child: InkWell(
-                                            child: Hero(
-                                              tag: 'HeroFullscreen',
-                                              child: Icon(
-                                                Icons.fullscreen,
-                                                color: Colors.white,
-                                              ),
+                                            child: Icon(
+                                              Icons.fullscreen,
+                                              color: Colors.white,
                                             ),
                                             onTap: () {
                                               Navigator.of(context).push(
@@ -161,9 +171,15 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                   ],
                 ),
               )
-            : Center(
-                child: CircularProgressIndicator(color: Colors.white),
-                // ),
+            : Container(
+                height: 200.h,
+                width: double.infinity,
+                color: Colors.black,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
               );
   }
 }

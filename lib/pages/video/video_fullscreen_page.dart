@@ -93,11 +93,15 @@ class _VideoFullscreenPageState extends State<VideoFullscreenPage> {
                                     child: Row(
                                       children: [
                                         SizedBox(width: deviceWidth * 0.03),
-                                        Text('0:00 /',
+                                        Text(
+                                            '${Helper.durationDisplay(widget.videoController.value.position)} /',
                                             style:
                                                 TextStyle(color: Colors.white)),
                                         Text(
-                                            '${Helper.durationDisplay(Duration(hours: 5))}',
+                                            Helper.durationDisplay(widget
+                                                .videoController
+                                                .value
+                                                .duration),
                                             style: TextStyle(
                                                 color: Colors.grey[200])),
                                         SliderTheme(
@@ -132,12 +136,9 @@ class _VideoFullscreenPageState extends State<VideoFullscreenPage> {
                                         ),
                                         Expanded(
                                           child: InkWell(
-                                            child: Hero(
-                                              tag: 'HeroFullscreen',
-                                              child: Icon(
-                                                Icons.fullscreen,
-                                                color: Colors.white,
-                                              ),
+                                            child: Icon(
+                                              Icons.fullscreen,
+                                              color: Colors.white,
                                             ),
                                             onTap: () {
                                               //reset to defaults then pop

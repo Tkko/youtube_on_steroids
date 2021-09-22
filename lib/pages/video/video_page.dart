@@ -1,5 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/app_bars/custom_video_page_app_bar.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/basic_video_card.dart';
@@ -86,6 +87,7 @@ class _VideoPageState extends State<VideoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final YoutubePlaylist ytModel = ModalRoute.of(context).settings.arguments;
     //button builder for Likes, Dislikes and so on;
     Widget _buildButton(IconData icon, String text) {
       return Column(
@@ -106,18 +108,18 @@ class _VideoPageState extends State<VideoPage> {
     }
 
     //builds 3 blocks, video info block, button block, channel block;
-    //can be seperated;
+    //can be separated;
     Widget _buildInfoBlock() {
       return Column(
         children: <Widget>[
           // video Info;
           ListTile(
             title: Text(
-              'Video Title here',
+              ytModel.title,
               style: TextStyle(fontSize: 18),
             ),
             subtitle: Text(
-              '${Helper.compactNumber(561132)}  views • ${Helper.convertToTimeAgo(DateTime.now())}',
+              '${Helper.compactNumber(int.parse(ytModel.view))}  views • ${Helper.convertToTimeAgo(DateTime.now())}',
               style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
             trailing: IconButton(
@@ -199,7 +201,9 @@ class _VideoPageState extends State<VideoPage> {
             shrinkWrap: true,
             itemCount: 5,
             itemBuilder: (context, index) {
-              return BasicVideoCard();
+              return BasicVideoCard(
+                ytModel: ytModel,
+              );
             }),
       );
     }
@@ -211,7 +215,7 @@ class _VideoPageState extends State<VideoPage> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             // Video Widget goes instead of this container.
-            ConcreteVideoFrame(),
+            ConcreteVideoFrame(ytModel),
 
             //error screen if vide doesn't load
 

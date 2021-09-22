@@ -1,4 +1,5 @@
 import 'package:youtube_on_steroids/app/app.dart';
+import 'package:youtube_on_steroids/cubits/history_cubit.dart';
 import 'package:youtube_on_steroids/pages/history/history_page.dart';
 import 'package:youtube_on_steroids/pages/home/home_page.dart';
 import 'package:youtube_on_steroids/widgets/app_bars/custom_app_bar.dart';
@@ -19,44 +20,48 @@ class _WrapperPageState extends State<WrapperPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              _selectedIndex == 0
-                  ? CustomAppBar(
-                      hasFilters: true,
-                      isFloating: true,
-                      isPinned: false,
-                    )
-                  : CustomAppBar(
-                      hasFilters: false,
-                      isFloating: true,
-                      isPinned: false,
-                    )
-            ];
-          },
-          body: [
-            HomePage(),
-            HistoryPage(),
-          ][_selectedIndex],
+    return BlocProvider(
+      create: (context) => HistoryCubit(),
+      child: Scaffold(
+        body: SafeArea(
+          child: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                _selectedIndex == 0
+                    ? CustomAppBar(
+                        hasFilters: true,
+                        isFloating: true,
+                        isPinned: false,
+                      )
+                    : CustomAppBar(
+                        hasFilters: false,
+                        isFloating: true,
+                        isPinned: false,
+                      )
+              ];
+            },
+            body: [
+              HomePage(),
+              HistoryPage(),
+            ][_selectedIndex],
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'History',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: 'History',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
