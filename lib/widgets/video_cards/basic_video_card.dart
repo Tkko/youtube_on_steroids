@@ -17,11 +17,8 @@ class BasicVideoCard extends StatelessWidget {
         children: [
           Container(
             // video frame
-            // height: 100,
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: BasicVideoFrame(ytModel),
-            ),
+            height: 200.h,
+            child: BasicVideoFrame(ytModel),
           ),
           Container(
             // video description

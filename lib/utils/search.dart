@@ -4,24 +4,15 @@ import 'package:youtube_on_steroids/app/app.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
+import 'package:youtube_on_steroids/services/cache/search_cache.dart';
 import 'package:youtube_on_steroids/utils/helper.dart';
+import 'package:youtube_on_steroids/widgets/video_cards/small_video_card.dart';
 
 class Search extends SearchDelegate<List<String>> {
   Search();
   String clickedQuery;
   final YoutubeExplodeFacade ytFacade = YoutubeExplodeFacade();
-  List<String> data = [
-    'a-placeholder1',
-    'b-PlaceHolder2',
-    'c-placeHolder3',
-    'c-Placeholder5'
-  ];
-  List<String> history = [
-    'history1',
-    'history2',
-    'history3',
-    'history4',
-  ];
+
   @override
   String get searchFieldLabel => 'Search Here...';
 
@@ -53,7 +44,6 @@ class Search extends SearchDelegate<List<String>> {
 
   @override
   Widget buildResults(BuildContext context) {
-    //Save search history here;
     return FutureBuilder(
         future: resultHandler(),
         builder: (context, snapshot) {
@@ -70,9 +60,11 @@ class Search extends SearchDelegate<List<String>> {
             return Text('No data');
           } else {
             return ListView.builder(
-              itemCount: 0,
+              itemCount: data.length,
               itemBuilder: (context, index) {
-                // return SmallVideoCard(data[index]);
+                return SmallVideoCard(
+                  ytModel: data[index],
+                );
               },
             );
           }
@@ -85,7 +77,7 @@ class Search extends SearchDelegate<List<String>> {
         future: YoutubeExplodeFacade().fetchKeywordSuggestion(query),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data.isEmpty) {
-            //TODO:: fetch search history
+            List<String> history = SearchResultHistory().show();
             return Center(
               child: ListView.builder(
                   itemCount: history.length,
@@ -156,6 +148,7 @@ class Search extends SearchDelegate<List<String>> {
                     flex: 17,
                     child: GestureDetector(
                       onTap: () {
+                        query = data[index];
                         clickedQuery = data[index];
                         showResults(context);
                       },
@@ -212,6 +205,8 @@ class Search extends SearchDelegate<List<String>> {
     if (clickedQuery != null) {
       searchKeyword = clickedQuery;
     }
+    SearchResultHistory().create(searchKeyword ?? query);
+
     List<Video> results =
         await ytFacade.fetchSearchResults(searchKeyword ?? query);
     List<YoutubePlaylist> videos = [];

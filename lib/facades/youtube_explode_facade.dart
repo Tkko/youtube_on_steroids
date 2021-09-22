@@ -5,7 +5,8 @@ class YoutubeExplodeFacade {
 
   Future fetchPlayList(String playlistUrl, int quantity, int skip) async {
     final playlist = await yt.playlists.get(playlistUrl);
-    final playlistVideos = yt.playlists.getVideos(playlist.id).take(quantity).skip(skip);
+    final playlistVideos =
+        yt.playlists.getVideos(playlist.id).take(quantity).skip(skip);
 
     return playlistVideos;
   }
@@ -20,7 +21,7 @@ class YoutubeExplodeFacade {
     return await yt.search.getVideos(keyword).timeout(Duration(seconds: 8));
   }
 
-  Future<List<String>> fetchKeywordSuggestion(String keyword) async{
+  Future<List<String>> fetchKeywordSuggestion(String keyword) async {
     return await YoutubeExplode().search.getQuerySuggestions(keyword);
   }
 }
