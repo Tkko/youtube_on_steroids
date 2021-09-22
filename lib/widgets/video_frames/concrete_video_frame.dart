@@ -52,35 +52,31 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
 
-    return
-        //  Container(
-        //   // height: 200.h,
-        //   width: double.infinity,
-        //   color: Colors.black,
-        //   child:
-        _videoController != null
-            ? GestureDetector(
-                onTap: () => setState(() {
-                  darkFrame = !darkFrame;
-                }),
-                child: Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      child: _videoController.value.isInitialized
-                          ? AspectRatio(
-                              aspectRatio: _videoController.value.aspectRatio,
-                              child: VideoPlayer(_videoController))
-                          : Text('Video loading...'),
-                    ),
-                    darkFrame
-                        ? Container(
-                            height: (_videoController.value.size.height /
-                                    _videoController.value.size.width) *
-                                deviceWidth,
-                            width: double.infinity,
-                            color: Colors.black.withOpacity(0.3),
-                            child: Column(
+    return _videoController != null
+        ? GestureDetector(
+            onTap: () => setState(() {
+              darkFrame = !darkFrame;
+            }),
+            child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  child: _videoController.value.isInitialized
+                      ? AspectRatio(
+                          aspectRatio: _videoController.value.aspectRatio,
+                          child: VideoPlayer(_videoController))
+                      : Text('Video loading...'),
+                ),
+                darkFrame
+                    ? Container(
+                        height: (_videoController.value.size.height /
+                                _videoController.value.size.width) *
+                            deviceWidth,
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.3),
+                        child: Stack(
+                          children: [
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -98,6 +94,8 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 12),
                                     child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         SizedBox(width: deviceWidth * 0.03),
                                         Text(
@@ -143,20 +141,17 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                           ),
                                         ),
                                         Expanded(
-                                          child: InkWell(
-                                            child: Icon(
-                                              Icons.fullscreen,
-                                              color: Colors.white,
-                                            ),
-                                            onTap: () {
+                                          child: IconButton(
+                                            icon: Icon(Icons.fullscreen),
+                                            color: Colors.white,
+                                            onPressed: () {
+                                              darkFrame = false;
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) {
                                                 return VideoFullscreenPage(
                                                     _videoController);
-                                              })).then((val) {
-                                                setState(() {});
-                                              });
+                                              }));
                                             },
                                           ),
                                         ),
@@ -166,20 +161,53 @@ class _ConcreteVideoFrameState extends State<ConcreteVideoFrame> {
                                 ),
                               ],
                             ),
-                          )
-                        : Container(),
-                  ],
-                ),
-              )
-            : Container(
-                height: 200.h,
-                width: double.infinity,
-                color: Colors.black,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-              );
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onDoubleTap: () {
+                                      setState(() {
+                                        _videoController.seekTo(
+                                            _videoController.value.position -
+                                                Duration(seconds: 10));
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onDoubleTap: () {},
+                                  ),
+                                ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onDoubleTap: () {
+                                      setState(() {
+                                        _videoController.seekTo(
+                                            _videoController.value.position +
+                                                Duration(seconds: 10));
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
+          )
+        : Container(
+            height: 200.h,
+            width: double.infinity,
+            color: Colors.black,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ),
+          );
   }
 }
