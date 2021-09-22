@@ -5,10 +5,10 @@ class VideoViewCache extends CacheService {
   final String key = 'history';
 
   @override
-  Future create(String data) async{
+  Future create(String data) async {
     List<String> videoHistory = show();
 
-    if(videoHistory.contains(data)) {
+    if (videoHistory.contains(data)) {
       videoHistory.removeWhere((element) => element == data);
     }
     videoHistory.insert(0, data);

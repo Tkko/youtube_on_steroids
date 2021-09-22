@@ -5,9 +5,7 @@ import 'package:youtube_on_steroids/widgets/video_frames/basic_video_frame.dart'
 class SmallVideoCard extends StatelessWidget {
   final YoutubePlaylist ytModel;
 
-  const SmallVideoCard({
-    @required this.ytModel
-  });
+  const SmallVideoCard({@required this.ytModel});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +45,7 @@ class SmallVideoCard extends StatelessWidget {
                   subtitle: RichText(
                     text: TextSpan(
                       style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                      text:
-                          '${ytModel.author}\n${ytModel.view} watching',
+                      text: '${ytModel.author}\n${ytModel.view} watching',
                     ),
                   ),
                   trailing: InkWell(
