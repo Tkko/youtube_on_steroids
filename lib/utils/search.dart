@@ -1,10 +1,16 @@
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_on_steroids/app/app.dart';
 
 import 'package:flutter/material.dart';
+import 'package:youtube_on_steroids/facades/youtube_explode_facade.dart';
+import 'package:youtube_on_steroids/models/youtube_playlist.dart';
+import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/small_video_card.dart';
 
 class Search extends SearchDelegate<List<String>> {
   Search();
+  String clickedQuery;
+  final YoutubeExplodeFacade ytFacade = YoutubeExplodeFacade();
   List<String> data = [
     'a-placeholder1',
     'b-PlaceHolder2',
@@ -48,135 +54,180 @@ class Search extends SearchDelegate<List<String>> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return SmallVideoCard();
-      },
-    );
-  }
-
-  Widget _historyList() {
-    return ListView.builder(
-        itemCount: history.length,
-        itemBuilder: (context, index) {
-          print(history);
-          return Row(children: <Widget>[
-            Expanded(
-              flex: 17,
-              child: GestureDetector(
-                onTap: () {
-                  query = history[index];
-                  showResults(context);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom:
-                              BorderSide(width: 1, color: Colors.grey[350]))),
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  height: 50,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            IconButton(
-                              iconSize: 20,
-                              color: Colors.grey[700],
-                              icon: Icon(Icons.history),
-                              onPressed: () {},
-                            ),
-                            Text('${history[index]}'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-                flex: 2,
-                child: Container(
-                  child: IconButton(
-                    iconSize: 16,
-                    onPressed: () {
-                      query = history[index];
-                    },
-                    icon: Icon(Icons.north_west),
-                  ),
-                ))
-          ]);
-        });
-  }
-
-  Widget _suggestionList() {
-    final List<String> suggest =
-        data.where((element) => element.startsWith(query)).toList();
-    return ListView.builder(
-      itemCount: suggest.length,
-      itemBuilder: (context, index) {
-        return Row(children: <Widget>[
-          Expanded(
-            flex: 17,
-            child: GestureDetector(
-              onTap: () {
-                query = suggest[index];
-                showResults(context);
+    //Save search history here;
+    return FutureBuilder(
+        future: resultHandler(),
+        builder: (context, snapshot) {
+          // Data is loading here
+          if (!snapshot.hasData) {
+            return Center(
+                child: CircularProgressIndicator(
+              color: Colors.red[700],
+            ));
+          }
+          // Data is loaded
+          final data = snapshot.data;
+          if (!snapshot.hasData) {
+            return Text('No data');
+          } else {
+            return ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return SmallVideoCard(data[index]);
               },
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(width: 1, color: Colors.grey[350]))),
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                height: 50,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          IconButton(
-                            iconSize: 20,
-                            color: Colors.grey[700],
-                            icon: Icon(Icons.search),
-                            onPressed: () {},
-                          ),
-                          Text('${suggest[index]}'),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-              flex: 2,
-              child: Container(
-                child: IconButton(
-                  iconSize: 16,
-                  onPressed: () {
-                    query = suggest[index];
-                  },
-                  icon: Icon(Icons.north_west),
-                ),
-              ))
-        ]);
-      },
-    );
+            );
+          }
+        });
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    if (query.isEmpty) {
-      return _historyList();
-    } else {
-      return _suggestionList();
+    return FutureBuilder<List<String>>(
+        future: YoutubeExplodeFacade().fetchKeywordSuggestion(query),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data.isEmpty) {
+            //TODO:: fetch search history
+            return Center(
+              child: ListView.builder(
+                  itemCount: history.length,
+                  itemBuilder: (context, index) {
+                    return Row(children: <Widget>[
+                      Expanded(
+                        flex: 17,
+                        child: GestureDetector(
+                          onTap: () {
+                            clickedQuery = history[index];
+                            query = history[index];
+                            showResults(context);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        width: 1, color: Colors.grey[350]))),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 15),
+                            height: 50,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      IconButton(
+                                        iconSize: 20,
+                                        color: Colors.grey[700],
+                                        icon: Icon(Icons.history),
+                                        onPressed: () {},
+                                      ),
+                                      Text('${history[index]}'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                          flex: 2,
+                          child: Container(
+                            child: IconButton(
+                              iconSize: 16,
+                              onPressed: () {
+                                query = history[index];
+                              },
+                              icon: Icon(Icons.north_west),
+                            ),
+                          ))
+                    ]);
+                  }),
+            );
+          }
+          if (!snapshot.hasData) {
+            return Text('No data');
+          } else {
+            final List<String> data = snapshot.data;
+            return ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return Row(children: <Widget>[
+                  Expanded(
+                    flex: 17,
+                    child: GestureDetector(
+                      onTap: () {
+                        clickedQuery = data[index];
+                        showResults(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: 1, color: Colors.grey[350]))),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        height: 50,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    iconSize: 20,
+                                    color: Colors.grey[700],
+                                    icon: Icon(Icons.search),
+                                    onPressed: () {},
+                                  ),
+                                  Text('${data[index]}'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      flex: 2,
+                      child: Container(
+                        child: IconButton(
+                          iconSize: 16,
+                          onPressed: () {
+                            query = data[index];
+                          },
+                          icon: Icon(Icons.north_west),
+                        ),
+                      ))
+                ]);
+              },
+            );
+          }
+        });
+  }
+
+  Future resultHandler() async {
+    String searchKeyword;
+    if (clickedQuery != null) {
+      searchKeyword = clickedQuery;
     }
+    List<Video> results =
+        await ytFacade.fetchSearchResults(searchKeyword ?? query);
+    List<YoutubePlaylist> videos = [];
+    results.forEach((e) {
+      final YoutubePlaylist current = YoutubePlaylist(
+        videoId: e.id.toString(),
+        title: e.title,
+        author: e.author,
+        coverImage: e.thumbnails.highResUrl,
+        view: '2100',
+        isLive: e.isLive,
+        duration: Helper.durationDisplay(e.duration),
+      );
+      videos.add(current);
+    });
+    return videos;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/cubits/history_cubit.dart';
+import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/small_video_card.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -57,9 +58,9 @@ class _HistoryPageState extends State<HistoryPage> {
                     print('clear search history');
                   }),
               _buildButton(
-                  text: 'MANAGE HISTORY',
+                  text: 'CLEAR LOCAL DATA',
                   function: () {
-                    print('Manage History');
+                    SharedPreferenceFacade.clear();
                   }),
             ],
           ),
@@ -82,7 +83,9 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: ListView.builder(
                   itemCount: 2,
                   itemBuilder: (context, index) {
-                    return SmallVideoCard();
+                    // return SmallVideoCard();
+                    //TEMPORARY UNTILL HISTORY IS LOADED
+                    return Container();
                   },
                 ),
               );
