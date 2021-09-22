@@ -215,22 +215,7 @@ class _VideoPageState extends State<VideoPage> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            // Video Widget goes instead of this container.
             ConcreteVideoFrame(ytModel),
-
-            //error screen if vide doesn't load
-
-            // Container(
-            //   height: 230.h,
-            //   width: double.infinity,
-            //   color: Colors.black,
-            //   child: Center(
-            //     child: Text(
-            //       'No Video Was Loaded',
-            //       style: TextStyle(color: Colors.white),
-            //     ),
-            //   ),
-            // ),
             Expanded(
                 child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
