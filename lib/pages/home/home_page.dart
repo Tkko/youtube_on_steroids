@@ -10,7 +10,6 @@ class HomePage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            flex: 10,
             child: YoutubeDataHandlerProxy(url: url).build(context),
           ),
         ],
