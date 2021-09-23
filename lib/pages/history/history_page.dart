@@ -6,6 +6,7 @@ import 'package:youtube_on_steroids/facades/shared_preference_facade.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
 import 'package:youtube_on_steroids/services/cache/cache_service.dart';
 import 'package:youtube_on_steroids/services/cache/video_view_cache.dart';
+import 'package:youtube_on_steroids/widgets/history_text_button.dart';
 import 'package:youtube_on_steroids/widgets/video_cards/small_video_card.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -20,7 +21,6 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     getHistory(context);
   }
@@ -30,44 +30,24 @@ class _HistoryPageState extends State<HistoryPage> {
     cubit.getHistory('watch_history');
   }
 
-
   @override
   Widget build(BuildContext context) {
-    List<String> cacheAsJson = cache.show();
-
-    Widget _buildButton({String text, Function function}) {
-      return Expanded(
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 9.8, horizontal: 7.98),
-          child: TextButton(
-            child: Text(
-              text,
-              style: TextStyle(color: Colors.black, fontSize: 14, height: 1.2),
-              maxLines: 3,
-              textAlign: TextAlign.center,
-            ),
-            onPressed: function,
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       body: Column(
         children: [
           Row(
             children: [
-              _buildButton(
+              HistoryTextButton(
                   text: 'CLEAR ALL WATCH HISTORY',
                   function: () {
                     print('clear history');
                   }),
-              _buildButton(
+              HistoryTextButton(
                   text: 'CLEAR ALL SEARCH HISTORY',
                   function: () {
                     print('clear search history');
                   }),
-              _buildButton(
+              HistoryTextButton(
                   text: 'CLEAR LOCAL DATA',
                   function: () {
                     SharedPreferenceFacade.clear();
@@ -81,25 +61,23 @@ class _HistoryPageState extends State<HistoryPage> {
             }
           }, builder: (context, state) {
             if (state is HistoryInitial) {
-              return Text('init');
-            } else if (state is HistoryLoading) {
+              return Container();
+            }
+            if (state is HistoryLoading) {
               return Center(
                   child: CircularProgressIndicator(
                 color: Colors.red[700],
               ));
-            } else if (state is HistoryLoaded) {
+            }
+            if (state is HistoryLoaded) {
               print(state.videos);
               return Expanded(
                 child: ListView.builder(
-                  itemCount: cacheAsJson.length,
+                  itemCount: state.videos.length,
                   itemBuilder: (context, index) {
-                    return SmallVideoCard(ytModel: YoutubePlaylist.fromJson(jsonDecode(cacheAsJson[index])));
+                    return SmallVideoCard(ytModel: state.videos[index]);
                   },
                 ),
-              );
-            } else if (state is HistoryConverted) {
-              return Center(
-                child: Text(state.videos.first),
               );
             } else
               return Center(

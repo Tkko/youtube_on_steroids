@@ -9,19 +9,17 @@ class VideoPlayPause extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        SizedBox(),
         Icon(Icons.skip_previous, size: 40.0, color: Colors.white),
         InkWell(
-          onTap: (){
+          onTap: () {
             currentVideoState ? setVideoState(false) : setVideoState(true);
           },
-          child: Icon(currentVideoState ? Icons.pause : Icons.play_arrow, size: 60.0, color: Colors.white),
+          child: Icon(currentVideoState ? Icons.pause : Icons.play_arrow,
+              size: 60.0, color: Colors.white),
         ),
-
         Icon(Icons.skip_next, size: 40.0, color: Colors.white),
-        SizedBox(),
       ],
     );
   }

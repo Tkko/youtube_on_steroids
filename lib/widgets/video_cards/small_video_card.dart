@@ -1,5 +1,6 @@
 import 'package:youtube_on_steroids/app/app.dart';
 import 'package:youtube_on_steroids/models/youtube_playlist.dart';
+import 'package:youtube_on_steroids/utils/helper.dart';
 import 'package:youtube_on_steroids/widgets/video_frames/basic_video_frame.dart';
 
 class SmallVideoCard extends StatelessWidget {
@@ -11,54 +12,49 @@ class SmallVideoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 140.h,
-      child: Center(
-        child: Container(
-          width: double.infinity,
-          height: 120.h,
-          child: Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.45,
-                height: 140.h,
-                child: Center(
-                  child: Container(
-                    width: double.infinity,
-                    height: 120.h,
-                    child: BasicVideoFrame(ytModel),
-                  ),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.55,
-                height: 140.h,
-                child: ListTile(
-                  title: RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                      text: ytModel.title,
-                    ),
-                  ),
-                  subtitle: RichText(
-                    text: TextSpan(
-                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                      text: '${ytModel.author}\n${ytModel.view} watching',
-                    ),
-                  ),
-                  trailing: InkWell(
-                    onTap: () {
-                      print('action!');
-                    },
-                    child: Icon(Icons.more_vert),
-                  ),
-                ),
-              ),
-            ],
+      padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: BasicVideoFrame(ytModel),
+            ),
           ),
-        ),
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: ListTile(
+                title: RichText(
+                  maxLines: 3,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14),
+                    text: ytModel.title,
+                  ),
+                ),
+                subtitle: RichText(
+                  text: TextSpan(
+                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                    text:
+                        '${ytModel.author}\n${Helper.generateRandomNum(110, 5000)} views',
+                  ),
+                ),
+                trailing: InkWell(
+                  onTap: () {
+                    print('action!');
+                  },
+                  child: Icon(Icons.more_vert),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

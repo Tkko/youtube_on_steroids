@@ -16,12 +16,11 @@ class BasicVideoFrame extends StatelessWidget {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () async{
+          onTap: () async {
             Navigator.of(context)
                 .pushNamed(AppRoutes.VIDEO, arguments: ytModel);
             cache.create(jsonEncode(ytModel.toJson()));
-
-            },
+          },
           child: Container(
             width: double.infinity,
             child: Image.network(ytModel.coverImage,

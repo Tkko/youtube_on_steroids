@@ -8,7 +8,7 @@ class HistoryInitial extends HistoryState {}
 class HistoryLoading extends HistoryState {}
 
 class HistoryLoaded extends HistoryState {
-  final List<String> videos;
+  final List<YoutubePlaylist> videos;
   HistoryLoaded(this.videos);
   @override
   bool operator ==(Object o) {
