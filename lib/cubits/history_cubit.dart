@@ -12,9 +12,7 @@ class HistoryCubit extends Cubit<HistoryState> {
       emit(HistoryLoading());
       final historyList = SharedPreferenceFacade.getStringList(key);
       emit(HistoryLoaded(historyList));
-    } on Exception {
-      emit(HistoryError('failed loading history'));
-    } catch (e) {
+    }  catch (e) {
       emit(HistoryError(e.toString()));
     }
   }

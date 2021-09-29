@@ -18,9 +18,12 @@ class YoutubeDataHandlerProxy implements IYoutube {
     this.dataHandler = YoutubeDataHandler(url: url);
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    if (SharedPreferenceFacade.getStringList(url) == null) {
+
+    if (SharedPreferenceFacade.getStringList(url) == null){
       return this.dataHandler.build(context);
     } else {
       List<String> jsonPlaylist = SharedPreferenceFacade.getStringList(url);

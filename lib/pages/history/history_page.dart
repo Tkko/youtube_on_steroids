@@ -18,18 +18,22 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   final CacheService cache = new VideoViewCache();
 
+
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    getHistory(context);
+  void initState() {
+    // TODO: implement initState
+    getHistory();
+
+    super.initState();
   }
 
-  void getHistory(BuildContext context) {
+
+
+  void getHistory() {
+
     final cubit = BlocProvider.of<HistoryCubit>(context);
     cubit.getHistory('watch_history');
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +97,9 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: ListView.builder(
                   itemCount: cacheAsJson.length,
                   itemBuilder: (context, index) {
-                    return SmallVideoCard(ytModel: YoutubePlaylist.fromJson(jsonDecode(cacheAsJson[index])));
+                    return SmallVideoCard(
+                        ytModel: YoutubePlaylist.fromJson(
+                            jsonDecode(cacheAsJson[index])));
                   },
                 ),
               );
@@ -102,12 +108,12 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: Text(state.videos.first),
               );
             } else
-              return Center(
-                child: Text(state.toString()),
-              );
+              return Center(child: Text(state.toString()));
           })
         ],
       ),
     );
   }
 }
+
+
